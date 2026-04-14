@@ -1,0 +1,702 @@
+/* ========================================
+   ZEUSS - LOGIN PAGE STYLES (NERO PURO)
+   ======================================== */
+
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    perspective: 1200px;
+}
+
+/* Background Effects - NERO PURO */
+.background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000;
+    z-index: -2;
+    overflow: hidden;
+}
+
+.canvas-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.grid-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(0deg, transparent 24%, rgba(0, 255, 0, 0.05) 25%, rgba(0, 255, 0, 0.05) 26%, transparent 27%, transparent 74%, rgba(0, 255, 0, 0.05) 75%, rgba(0, 255, 0, 0.05) 76%, transparent 77%, transparent),
+        linear-gradient(90deg, transparent 24%, rgba(0, 255, 0, 0.05) 25%, rgba(0, 255, 0, 0.05) 26%, transparent 27%, transparent 74%, rgba(0, 255, 0, 0.05) 75%, rgba(0, 255, 0, 0.05) 76%, transparent 77%, transparent);
+    background-size: 50px 50px;
+    z-index: 0;
+    pointer-events: none;
+    animation: moveGrid 5s linear infinite;
+}
+
+@keyframes moveGrid {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 50px 50px;
+    }
+}
+
+.video-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -3;
+    opacity: 0.15;
+}
+
+.noise {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' seed='2' /%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    animation: grain 0.8s steps(10) infinite;
+}
+
+.glow-blur {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(0, 255, 0, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(100px);
+    top: 30%;
+    left: -10%;
+    animation: float 15s ease-in-out infinite;
+    z-index: 0;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0);
+    }
+    50% {
+        transform: translate(50px, 80px);
+    }
+}
+
+/* Login Wrapper */
+.login-wrapper {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Login Container with Two Columns */
+.login-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    width: 100%;
+    max-width: 1400px;
+    height: 90vh;
+    max-height: 800px;
+}
+
+/* Left Section - PDF Preview */
+.login-left {
+    position: relative;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pdf-preview {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(0, 255, 0, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 
+        0 0 20px rgba(0, 255, 0, 0.2),
+        inset 0 0 20px rgba(0, 255, 0, 0.05);
+    animation: slideInLeft 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.pdf-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.9) 0%, rgba(26, 10, 46, 0.9) 100%);
+}
+
+#pdfCanvas {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.pdf-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0, 255, 0, 0.05) 0%, rgba(0, 255, 255, 0.05) 100%);
+    pointer-events: none;
+    border-radius: 10px;
+}
+
+/* Right Section - Login Form */
+.login-right {
+    position: relative;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000000;
+}
+
+.login-card {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    padding: 50px;
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid rgba(0, 255, 0, 0.3);
+    border-radius: 0;
+    backdrop-filter: blur(20px);
+    box-shadow: 
+        0 0 30px rgba(0, 255, 0, 0.2),
+        inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    animation: slideInRight 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    overflow: hidden;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.login-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+        from 0deg,
+        rgba(0, 255, 0, 0.1) 0deg,
+        rgba(0, 255, 255, 0.1) 90deg,
+        rgba(255, 0, 255, 0.1) 180deg,
+        rgba(0, 255, 0, 0.1) 360deg
+    );
+    animation: rotate 8s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.login-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.5), transparent);
+    animation: moveLine 3s ease-in-out infinite;
+}
+
+@keyframes moveLine {
+    0%, 100% {
+        top: 0;
+    }
+    50% {
+        top: 100%;
+    }
+}
+
+/* Card Decorations */
+.card-decorations {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.corner {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba(0, 255, 0, 0.5);
+}
+
+.corner-tl {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+}
+
+.corner-tr {
+    top: 0;
+    right: 0;
+    border-left: none;
+    border-bottom: none;
+}
+
+.corner-bl {
+    bottom: 0;
+    left: 0;
+    border-right: none;
+    border-top: none;
+}
+
+.corner-br {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+}
+
+.scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.8), transparent);
+    animation: scan 3s ease-in-out infinite;
+    z-index: 1;
+}
+
+@keyframes scan {
+    0% {
+        top: 0;
+    }
+    100% {
+        top: 100%;
+    }
+}
+
+/* Logo Section */
+.logo-section {
+    position: relative;
+    z-index: 5;
+    text-align: center;
+    margin-bottom: 40px;
+    animation: slideDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.logo-text h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-shadow: 
+        0 0 10px var(--primary-color),
+        0 0 20px var(--secondary-color);
+    letter-spacing: 4px;
+    margin-bottom: 5px;
+}
+
+.logo-text p {
+    font-size: 1rem;
+    color: var(--secondary-color);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 300;
+}
+
+.subtitle-line {
+    width: 60px;
+    height: 2px;
+    background: var(--primary-color);
+    margin: 15px auto;
+    box-shadow: 0 0 10px var(--primary-color);
+    animation: expandWidth 0.8s ease-out 0.5s forwards;
+    transform-origin: center;
+    transform: scaleX(0);
+}
+
+@keyframes expandWidth {
+    to {
+        transform: scaleX(1);
+    }
+}
+
+/* Form Group */
+.form-group {
+    position: relative;
+    z-index: 5;
+    margin-bottom: 30px;
+    animation: fadeInUp 0.6s ease-out backwards;
+}
+
+.form-group:nth-child(1) {
+    animation-delay: 0.6s;
+}
+
+.form-group:nth-child(2) {
+    animation-delay: 0.8s;
+}
+
+@keyframes fadeInUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    color: var(--secondary-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+.label-icon {
+    font-size: 0.6rem;
+    animation: blink 1.5s ease-in-out infinite;
+}
+
+@keyframes blink {
+    0%, 49%, 100% {
+        opacity: 1;
+    }
+    50%, 99% {
+        opacity: 0.3;
+    }
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    background: rgba(0, 255, 0, 0.02);
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    border-radius: 0;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.form-input:focus {
+    background: rgba(0, 255, 0, 0.05);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3) inset;
+}
+
+.form-input::placeholder {
+    color: rgba(0, 255, 0, 0.4);
+}
+
+.input-border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    border-bottom: 2px solid var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.form-input:focus ~ .input-border {
+    width: 100%;
+}
+
+.input-glow {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    opacity: 0;
+    box-shadow: 0 0 10px var(--primary-color);
+    transition: opacity 0.3s ease;
+}
+
+.form-input:focus ~ .input-glow {
+    opacity: 1;
+}
+
+/* Login Button */
+.login-btn {
+    position: relative;
+    z-index: 5;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, rgba(0, 255, 0, 0.2) 0%, rgba(0, 255, 255, 0.2) 100%);
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    font-size: 0.95rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.login-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.login-btn:hover::before {
+    left: 100%;
+}
+
+.login-btn:hover {
+    background: linear-gradient(135deg, rgba(0, 255, 0, 0.3) 0%, rgba(0, 255, 255, 0.3) 100%);
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+    transform: translateY(-2px);
+}
+
+.login-btn:active {
+    transform: translateY(2px);
+}
+
+.btn-text {
+    position: relative;
+    z-index: 2;
+}
+
+.btn-arrow {
+    position: relative;
+    z-index: 2;
+    transition: transform 0.3s ease;
+}
+
+.login-btn:hover .btn-arrow {
+    transform: translateX(5px);
+}
+
+.btn-glow {
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 255, 0, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* Error Message */
+.login-error {
+    position: relative;
+    z-index: 5;
+    color: var(--accent-color);
+    font-size: 0.85rem;
+    margin-top: 15px;
+    text-align: center;
+    min-height: 20px;
+    animation: slideDown 0.3s ease;
+}
+
+/* Status Bar */
+.status-bar {
+    position: relative;
+    z-index: 5;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 255, 0, 0.2);
+    display: flex;
+    justify-content: space-around;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    color: rgba(0, 255, 0, 0.6);
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    background: rgba(0, 255, 0, 0.3);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.status-dot.active {
+    background: var(--primary-color);
+    box-shadow: 0 0 8px var(--primary-color);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.4;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .login-container {
+        grid-template-columns: 1fr;
+        max-height: 100%;
+    }
+
+    .login-left {
+        display: none;
+    }
+
+    .login-right {
+        width: 100%;
+        min-height: 100vh;
+    }
+
+    .login-card {
+        max-width: 500px;
+    }
+
+    .logo-text h1 {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .login-card {
+        padding: 35px;
+    }
+
+    .logo-text h1 {
+        font-size: 2rem;
+    }
+
+    .form-input {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+
+    .login-btn {
+        padding: 12px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-right {
+        padding: 20px;
+    }
+
+    .login-card {
+        padding: 25px;
+        max-width: 100%;
+    }
+
+    .logo-text h1 {
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+    }
+
+    .logo-text p {
+        font-size: 0.8rem;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .status-bar {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

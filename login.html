@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>ZEUSS — DRONE INTERCEPTOR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@100;300;400;600;700;800;900&family=Barlow:wght@300;400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E8C76A;
+      --cream: #F0EBE0;
+      --black: #000000;
+      --dark: #0A0A0A;
+      --mono: 'Share Tech Mono', monospace;
+      --condensed: 'Barlow Condensed', sans-serif;
+      --body: 'Barlow', sans-serif;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: #000;
+      color: var(--cream);
+      font-family: var(--body);
+      overflow: hidden;
+      cursor: crosshair;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ── SCAN LINE ── */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -100%;
+      left: 0; right: 0;
+      height: 40%;
+      background: linear-gradient(transparent, rgba(201,168,76,0.02), transparent);
+      animation: scanline 8s linear infinite;
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    @keyframes scanline {
+      0% { top: -40%; }
+      100% { top: 140%; }
+    }
+
+    /* ── CUSTOM CURSOR ── */
+    .cursor {
+      position: fixed;
+      width: 40px; height: 40px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 99999;
+      transition: width 0.2s, height 0.2s, border-color 0.2s;
+      mix-blend-mode: difference;
+    }
+    .cursor-dot {
+      position: fixed;
+      width: 4px; height: 4px;
+      background: var(--gold);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 99999;
+    }
+
+    /* ── LOGIN PAGE ── */
+    #login-page {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      z-index: 100;
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    #login-page.hidden {
+      opacity: 0;
+      transform: scale(1.05);
+      pointer-events: none;
+    }
+
+    /* Grid lines background */
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridPulse 4s ease-in-out infinite;
+    }
+    @keyframes gridPulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    /* Corner brackets */
+    .corner {
+      position: absolute;
+      width: 60px; height: 60px;
+      border-color: var(--gold);
+      border-style: solid;
+      opacity: 0.6;
+    }
+    .corner-tl { top: 20px; left: 20px; border-width: 1px 0 0 1px; }
+    .corner-tr { top: 20px; right: 20px; border-width: 1px 1px 0 0; }
+    .corner-bl { bottom: 20px; left: 20px; border-width: 0 0 1px 1px; }
+    .corner-br { bottom: 20px; right: 20px; border-width: 0 1px 1px 0; }
+
+    /* HUD elements */
+    .hud-text {
+      position: absolute;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--gold);
+      opacity: 0.4;
+      letter-spacing: 0.15em;
+      animation: blink 3s step-end infinite;
+    }
+    .hud-tl { top: 28px; left: 80px; }
+    .hud-tr { top: 28px; right: 80px; text-align: right; }
+    .hud-bl { bottom: 28px; left: 80px; }
+    .hud-br { bottom: 28px; right: 80px; text-align: right; }
+    @keyframes blink {
+      0%, 90%, 100% { opacity: 0.4; }
+      95% { opacity: 0.1; }
+    }
+
+    /* Logo */
+    .login-logo {
+      text-align: center;
+      margin-bottom: 48px;
+      animation: fadeInDown 1s ease forwards;
+    }
+    .login-logo h1 {
+      font-family: var(--condensed);
+      font-size: clamp(64px, 12vw, 120px);
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      color: var(--cream);
+      line-height: 0.9;
+    }
+    .login-logo .subtitle {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      color: var(--gold);
+      margin-top: 8px;
+    }
+    .login-logo .divider {
+      width: 200px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 16px auto;
+    }
+    .login-logo .product-name {
+      font-family: var(--condensed);
+      font-size: clamp(14px, 3vw, 20px);
+      font-weight: 300;
+      letter-spacing: 0.6em;
+      color: var(--cream);
+      opacity: 0.6;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Login box */
+    .login-box {
+      position: relative;
+      width: min(380px, 90vw);
+      padding: 40px;
+      background: rgba(10,10,10,0.8);
+      border: 1px solid rgba(201,168,76,0.2);
+      animation: fadeInUp 1s 0.3s ease both;
+    }
+    .login-box::before {
+      content: 'SECURE ACCESS TERMINAL';
+      position: absolute;
+      top: -10px;
+      left: 20px;
+      background: #000;
+      padding: 0 8px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--gold);
+      letter-spacing: 0.2em;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .field-group {
+      margin-bottom: 20px;
+    }
+    .field-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--gold);
+      letter-spacing: 0.25em;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .field-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(201,168,76,0.04);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-bottom: 1px solid rgba(201,168,76,0.4);
+      color: var(--cream);
+      font-family: var(--mono);
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      outline: none;
+      transition: all 0.3s;
+      -webkit-appearance: none;
+    }
+    .field-input:focus {
+      background: rgba(201,168,76,0.06);
+      border-color: rgba(201,168,76,0.6);
+      border-bottom-color: var(--gold);
+    }
+    .field-input::placeholder {
+      color: rgba(240,235,224,0.15);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      margin-top: 8px;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: var(--condensed);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.4em;
+      cursor: crosshair;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .login-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold);
+      transform: translateX(-101%);
+      transition: transform 0.3s ease;
+    }
+    .login-btn:hover::before { transform: translateX(0); }
+    .login-btn:hover { color: #000; }
+    .login-btn span { position: relative; z-index: 1; }
+
+    .login-error {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: #ff3333;
+      margin-top: 12px;
+      text-align: center;
+      letter-spacing: 0.1em;
+      min-height: 16px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .login-error.show { opacity: 1; }
+
+    /* Status indicator */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(201,168,76,0.1);
+    }
+    .status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.6); }
+    }
+    .status-text {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: rgba(201,168,76,0.5);
+      letter-spacing: 0.15em;
+    }
+
+    /* ── MAIN CONTENT (POST-LOGIN) ── */
+    #main-content {
+      position: fixed;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s 0.3s ease;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    #main-content.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* ── SLIDE PROGRESS ── */
+    .slide-progress {
+      position: fixed;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 50;
+    }
+    .progress-dot {
+      width: 3px;
+      height: 20px;
+      background: rgba(201,168,76,0.2);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .progress-dot.active {
+      background: var(--gold);
+      height: 30px;
+    }
+    .progress-dot:hover {
+      background: rgba(201,168,76,0.5);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .slide-progress { display: none; }
+      .corner { display: none; }
+      .hud-text { display: none; }
+    }
+  </style>
+</head>
+<body>
+<!-- Custom cursor (desktop only) -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursor-dot"></div>
+
+<!-- ══════════════ LOGIN PAGE ══════════════ -->
+<div id="login-page">
+  <div class="grid-bg"></div>
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <div class="hud-text hud-tl">SYS:ZEUSS_v2.1<br>STATUS:STANDBY</div>
+  <div class="hud-text hud-tr">LAT:41.2840°N<br>LON:12.4900°E</div>
+  <div class="hud-text hud-bl">ENC:AES-256<br>CHANNEL:SECURE</div>
+  <div class="hud-text hud-br">THREAT LVL:ACTIVE<br>NET:MESH_OK</div>
+
+  <div class="login-logo">
+    <h1>ZEUSS</h1>
+    <p class="subtitle">SURVIVE. ADAPT. DOMINATE.</p>
+    <div class="divider"></div>
+    <p class="product-name">INTERCEPTOR</p>
+  </div>
+
+  <div class="login-box">
+    <div class="field-group">
+      <label class="field-label" for="username">// OPERATOR ID</label>
+      <input class="field-input" type="text" id="username" placeholder="Enter operator ID" autocomplete="off" spellcheck="false" />
+    </div>
+    <div class="field-group">
+      <label class="field-label" for="password">// ACCESS CODE</label>
+      <input class="field-input" type="password" id="password" placeholder="••••••••••••" autocomplete="off" />
+    </div>
+    <button class="login-btn" id="login-btn"><span>AUTHENTICATE</span></button>
+    <div class="login-error" id="login-error">ACCESS DENIED — INVALID CREDENTIALS</div>
+    <div class="status-bar">
+      <div class="status-dot"></div>
+      <span class="status-text">ENCRYPTED CHANNEL ACTIVE</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ MAIN CONTENT ══════════════ -->
+<div id="main-content">
+  <nav class="slide-progress" id="slide-progress"></nav>
+  <p style="position:fixed;bottom:20px;right:20px;font-family:var(--mono);font-size:10px;color:rgba(201,168,76,0.4);z-index:10;">Dashboard area — slides would go here</p>
+</div>
+
+<script>
+// ── AUTH CONFIG ──
+const VALID_USER = 'zeus';
+const VALID_PASS = 'Interceptor2026!';
+
+const loginPage = document.getElementById('login-page');
+const mainContent = document.getElementById('main-content');
+const loginBtn = document.getElementById('login-btn');
+const loginError = document.getElementById('login-error');
+
+function checkSession() {
+  return sessionStorage.getItem('zeuss_auth') === 'true';
+}
+
+if (checkSession()) {
+  loginPage.classList.add('hidden');
+  mainContent.classList.add('visible');
+  setTimeout(initMain, 100);
+}
+
+loginBtn.addEventListener('click', authenticate);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') authenticate();
+});
+
+function authenticate() {
+  const u = document.getElementById('username').value.trim();
+  const p = document.getElementById('password').value;
+  if (u === VALID_USER && p === VALID_PASS) {
+    sessionStorage.setItem('zeuss_auth', 'true');
+    document.body.style.transition = 'opacity 0.6s ease';
+    document.body.style.opacity = '0';
+    setTimeout(() => {
+      window.location.href = 'dashboard-main.html';
+    }, 600);
+  } else {
+    loginError.classList.add('show');
+    loginBtn.style.borderColor = '#ff3333';
+    document.getElementById('password').value = '';
+    setTimeout(() => {
+      loginError.classList.remove('show');
+      loginBtn.style.borderColor = '';
+    }, 3000);
+  }
+}
+
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+const cursorDot = document.getElementById('cursor-dot');
+let cx = 0, cy = 0, tx = 0, ty = 0;
+
+document.addEventListener('mousemove', e => {
+  tx = e.clientX; ty = e.clientY;
+  cursorDot.style.left = tx + 'px';
+  cursorDot.style.top = ty + 'px';
+});
+
+function animCursor() {
+  cx += (tx - cx) * 0.12;
+  cy += (ty - cy) *.12;
+  cursor.style.left = cx + 'px';
+  cursor.style.top = cy + 'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+
+document.querySelectorAll('button, a, input, .app-item, .mode-tag, .spec-item').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.width = '60px'; cursor.style.height = '60px'; });
+  el.addEventListener('mouseleave', () => { cursor.style.width = '40px'; cursor.style.height = '40px'; });
+});
+
+// ── MAIN INIT ──
+function initMain() {
+  buildProgress();
+}
+
+// Progress dots
+function buildProgress() {
+  const progress = document.getElementById('slide-progress');
+  for (let i = 0; i < 11; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'progress-dot';
+    if (i === 0) dot.classList.add('active');
+    progress.appendChild(dot);
+  }
+}
+</script>
+</body>
+</html>

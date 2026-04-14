@@ -1,0 +1,225 @@
+/* ========================================
+   ZEUSS - PREMIUM ANIMATIONS
+   ======================================== */
+
+/* Advanced Scale & Rotate Animations */
+@keyframes rotateInScale {
+    0% {
+        transform: rotateX(-90deg) rotateY(-90deg) scale(0);
+        opacity: 0;
+    }
+    100% {
+        transform: rotateX(0) rotateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInWithRotate {
+    0% {
+        transform: translateX(-100%) rotateY(45deg);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0) rotateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes bounceInScale {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    70% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes elasticIn {
+    0% {
+        transform: scale(0) rotate(-45deg);
+        opacity: 0;
+    }
+    70% {
+        transform: scale(1.1) rotate(5deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(0) translateX(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) translateX(50px) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Text Character Animation */
+@keyframes charSlideIn {
+    0% {
+        transform: translateY(100%) rotate(45deg);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0) rotate(0);
+        opacity: 1;
+    }
+}
+
+@keyframes textGlow {
+    0%, 100% {
+        text-shadow: 
+            0 0 5px var(--primary-color),
+            0 0 10px var(--primary-color),
+            0 0 15px var(--accent-color);
+        color: var(--text-primary);
+    }
+    50% {
+        text-shadow: 
+            0 0 10px var(--primary-color),
+            0 0 20px var(--secondary-color),
+            0 0 30px var(--accent-color);
+        color: var(--primary-color);
+    }
+}
+
+/* Glitch Effect */
+@keyframes glitch {
+    0% {
+        clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 0% 50%);
+        transform: translateX(-2px);
+    }
+    20% {
+        clip-path: polygon(0% 0%, 100% 0%, 100% 45%, 0% 55%);
+        transform: translateX(2px);
+    }
+    40% {
+        clip-path: polygon(0% 20%, 100% 20%, 100% 45%, 0% 55%);
+        transform: translateX(-2px);
+    }
+    60% {
+        clip-path: polygon(0% 30%, 100% 30%, 100% 60%, 0% 70%);
+        transform: translateX(2px);
+    }
+    80% {
+        clip-path: polygon(0% 55%, 100% 55%, 100% 100%, 0% 100%);
+        transform: translateX(-2px);
+    }
+    100% {
+        clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+        transform: translateX(0);
+    }
+}
+
+/* Neon Glow Pulse */
+@keyframes neonPulse {
+    0%, 100% {
+        text-shadow: 
+            0 0 7px #fff,
+            0 0 10px #fff,
+            0 0 21px #fff,
+            0 0 42px var(--primary-color),
+            0 0 82px var(--primary-color);
+        box-shadow: 
+            0 0 7px #fff,
+            0 0 10px #fff,
+            0 0 21px #fff,
+            0 0 42px var(--primary-color),
+            0 0 82px var(--primary-color);
+    }
+    50% {
+        text-shadow: 
+            0 0 2px #fff,
+            0 0 7px #fff,
+            0 0 21px #fff,
+            0 0 42px var(--primary-color),
+            0 0 82px var(--primary-color);
+        box-shadow: 
+            0 0 2px #fff,
+            0 0 7px #fff,
+            0 0 21px #fff,
+            0 0 42px var(--secondary-color),
+            0 0 82px var(--secondary-color);
+    }
+}
+
+/* Hex Rotate */
+@keyframes hexRotate {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Wave Effect */
+@keyframes wave {
+    0%, 100% {
+        transform: translateX(0) translateY(0);
+    }
+    25% {
+        transform: translateX(-10px) translateY(-10px);
+    }
+    50% {
+        transform: translateX(0) translateY(-20px);
+    }
+    75% {
+        transform: translateX(10px) translateY(-10px);
+    }
+}
+
+/* Shimmer Effect */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+/* Animated-In Class */
+.animated-in {
+    animation: bounceInScale 0.8s var(--transition-smooth) forwards;
+}
+
+/* Apply to different elements */
+.animated-in.text {
+    animation: charSlideIn 0.6s var(--transition-smooth) forwards;
+}
+
+.animated-in.glow {
+    animation: textGlow 3s ease-in-out infinite;
+}
+
+.animated-in.glitch {
+    animation: glitch 0.3s ease-in-out;
+}
+
+/* Hover States with Animation */
+.btn-hover-glow:hover {
+    animation: neonPulse 1.5s ease-in-out;
+}
+
+.rotate-on-hover:hover {
+    animation: hexRotate 0.6s var(--transition-smooth);
+}
+
+.wave-on-hover:hover {
+    animation: wave 0.6s ease-in-out;
+}
