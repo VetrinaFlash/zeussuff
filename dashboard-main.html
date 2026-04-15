@@ -34,6 +34,13 @@
     @keyframes wow-out { 0% { opacity: 1; transform: scale(1) rotateX(0deg) rotateY(0deg); filter: blur(0px); } 50% { transform: scale(1.1) rotateX(45deg) rotateY(-20deg); } 100% { opacity: 0; transform: scale(0.3) rotateX(90deg) rotateY(45deg); filter: blur(20px); } }
     @keyframes wow-exit-left { 0% { opacity: 1; transform: translateX(0) rotateY(0deg) scale(1); } 100% { opacity: 0; transform: translateX(-150%) rotateY(-90deg) scale(0.5); filter: blur(15px); } }
     @keyframes wow-exit-right { 0% { opacity: 1; transform: translateX(0) rotateY(0deg) scale(1); } 100% { opacity: 0; transform: translateX(150%) rotateY(90deg) scale(0.5); filter: blur(15px); } }
+    @keyframes scan-line { 0% { top: -100%; } 100% { top: 200%; } }
+    @keyframes text-flicker { 0%, 95%, 100% { opacity: 1; } 96% { opacity: 0.4; } 97% { opacity: 1; } 98% { opacity: 0.2; } 99% { opacity: 1; } }
+    @keyframes border-pulse { 0%, 100% { border-color: rgba(201,168,76,0.3); box-shadow: 0 0 0 rgba(201,168,76,0); } 50% { border-color: rgba(201,168,76,0.8); box-shadow: 0 0 20px rgba(201,168,76,0.2); } }
+    @keyframes zoom-bg { 0% { transform: scale(1); } 100% { transform: scale(1.06); } }
+    @keyframes slide-up-reveal { 0% { opacity: 0; transform: translateY(60px) skewY(2deg); } 100% { opacity: 1; transform: translateY(0) skewY(0deg); } }
+    @keyframes char-in { 0% { opacity: 0; transform: translateY(20px) rotateX(-40deg); } 100% { opacity: 1; transform: translateY(0) rotateX(0deg); } }
+    @keyframes noise-drift { 0% { background-position: 0 0; } 100% { background-position: 100px 100px; } }
 
     html, body {
       width: 100%; height: 100vh;
@@ -168,6 +175,21 @@
       padding: 0;
     }
 
+    .slide.no-image.hero-text-slide .slide-content {
+      justify-content: center;
+      align-items: center;
+    }
+
+    .slide.no-image.hero-text-slide .slide-text {
+      max-width: 780px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+    }
+
     .slide.has-image .slide-text::after {
       content: '';
       position: absolute;
@@ -250,121 +272,274 @@
       }
     }
 
-    @media (max-width: 768px) {
-      .slide {
-        padding: 22px 14px 92px;
-      }
+    
 
-      .slide-content {
-        gap: 14px;
-        padding: 0;
+    /* Standardized slide proportions */
+    .slide-content {
+      max-width: 1320px;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .slide.has-image .slide-content,
+    .slide.zeuss-slide.side-by-side {
+      display: grid;
+      grid-template-columns: minmax(0, 470px) minmax(0, 1fr);
+      gap: 48px;
+      align-items: center;
+    }
+
+    .slide.has-image .slide-image,
+    .slide.zeuss-slide.side-by-side .slide-image {
+      width: 100%;
+      max-width: none;
+      display: block;
+      overflow: visible;
+      perspective: none;
+    }
+
+    .slide.has-image .slide-image.left,
+    .slide.zeuss-slide.side-by-side .slide-image.left {
+      order: 0;
+    }
+
+    .slide.has-image .slide-image.right,
+    .slide.zeuss-slide.side-by-side .slide-image.right {
+      order: 2;
+    }
+
+    .slide.has-image .slide-text,
+    .slide.zeuss-slide.side-by-side .slide-text,
+    .hero-text-slide .slide-text {
+      width: 100%;
+      max-width: 470px;
+      max-height: none;
+      overflow: visible;
+      padding: 28px 30px;
+      border-radius: 24px;
+    }
+
+    .slide.has-image .slide-image img,
+    .slide.zeuss-slide.side-by-side .slide-image img {
+      width: 100%;
+      height: min(62vh, 680px);
+      max-width: none;
+      max-height: none;
+      object-fit: cover;
+      object-position: center center;
+      border-radius: 22px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.34);
+      clip-path: none;
+      animation: clip-reveal 0.8s ease 0.2s both;
+    }
+
+    .hero-text-slide .slide-image img {
+      height: min(72vh, 760px);
+      filter: brightness(0.52) saturate(0.95) contrast(1.04);
+    }
+
+    .slide h2 {
+      font-size: clamp(34px, 4.6vw, 58px);
+      line-height: 1.02;
+      margin-bottom: 16px;
+      letter-spacing: 0.06em;
+    }
+
+    .slide .subtitle {
+      font-size: clamp(11px, 1.2vw, 13px);
+      line-height: 1.45;
+      margin-bottom: 12px;
+      letter-spacing: 0.18em;
+    }
+
+    .slide .description,
+    .zeuss-bullets li {
+      font-size: clamp(14px, 1.12vw, 16px);
+      line-height: 1.52;
+    }
+
+    .zeuss-bullets { margin-top: 10px; }
+    .zeuss-bullets li { padding: 5px 0; }
+    .divider { margin: 12px 0 14px; }
+
+@media (max-width: 768px) {
+      .slide.no-image .slide-content,
+      .slide.no-image.hero-text-slide .slide-content {
+        display: flex;
         align-items: center;
         justify-content: center;
-        min-height: calc(100vh - 124px);
+        min-height: calc(100vh - 96px);
+        padding: 24px 18px;
       }
 
-      .slide-text {
-        text-align: left;
-        order: 2;
-        z-index: 20;
-        width: min(100%, 320px);
-        max-width: 320px;
+      .slide.no-image .slide-text,
+      .slide.no-image.hero-text-slide .slide-text {
+        position: relative;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        width: min(100%, 520px);
+        max-width: 520px;
         margin: 0 auto;
-        padding: 16px 16px 18px;
-        border: 1px solid rgba(255,255,255,0.08);
-        background:
-          linear-gradient(180deg, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.90) 100%);
-        backdrop-filter: blur(12px) saturate(112%);
-        -webkit-backdrop-filter: blur(12px) saturate(112%);
+        padding: 24px 22px 26px;
+        border: 1px solid rgba(201,168,76,0.18);
         border-radius: 22px;
-        box-shadow:
-          0 18px 50px rgba(0,0,0,0.45),
-          inset 0 1px 0 rgba(255,255,255,0.06);
+        background: linear-gradient(180deg, rgba(0,0,0,0.68) 0%, rgba(0,0,0,0.88) 100%);
+        box-shadow: 0 22px 60px rgba(0,0,0,0.28);
+        text-align: center;
+      }
+
+      .slide.no-image .divider,
+      .slide.no-image.hero-text-slide .divider {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .status { display: none !important; }
+
+      .slide {
+        padding: 0 0 96px;
+        overflow: hidden;
+      }
+
+      .slide-content,
+      .slide.has-image .slide-content,
+      .slide.zeuss-slide.side-by-side,
+      .zeuss-slide.side-by-side .slide-content,
+      .hero-text-slide .slide-content {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        min-height: 100vh;
+        gap: 0;
+      }
+
+      .slide-image,
+      .slide.zeuss-slide.side-by-side .slide-image {
+        position: fixed !important;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        margin: 0 !important;
+        z-index: 1;
+        display: block;
+      }
+
+      .slide-image img,
+      .slide.zeuss-slide.side-by-side .slide-image img,
+      .hero-text-slide .slide-image img,
+      .zeuss-slide .slide-image img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        max-width: none !important;
+        max-height: none !important;
+        object-fit: cover;
+        object-position: center center;
+        border-radius: 0;
+        box-shadow: none;
+        clip-path: none;
+        filter: brightness(0.48) saturate(0.92) contrast(1.05);
+        animation: zoom-bg 10s ease-out both;
+      }
+
+      .slide-text,
+      .slide.has-image .slide-text,
+      .slide.zeuss-slide.side-by-side .slide-text,
+      .hero-text-slide .slide-text {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 74px;
+        z-index: 20;
+        width: 100%;
+        max-width: none;
+        max-height: none;
+        min-height: 0;
+        overflow: visible;
+        margin: 0;
+        padding: 18px 18px 20px;
+        border: none;
+        border-top: 1px solid rgba(201,168,76,0.22);
+        border-radius: 24px 24px 0 0;
+        background: linear-gradient(180deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.78) 24%, rgba(0,0,0,0.92) 56%, rgba(0,0,0,0.98) 100%);
+        box-shadow: none;
+        backdrop-filter: blur(10px) saturate(112%);
+        -webkit-backdrop-filter: blur(10px) saturate(112%);
       }
 
       .slide-text.center {
         text-align: center;
       }
 
-      .slide.has-image .slide-text::before {
-        content: '';
-        position: absolute;
-        inset: -1px;
-        border-radius: inherit;
-        pointer-events: none;
-        background: linear-gradient(135deg, rgba(201,168,76,0.18), rgba(255,255,255,0.02) 36%, rgba(201,168,76,0.08) 100%);
-        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        mask-composite: exclude;
-        -webkit-mask-composite: xor;
-        padding: 1px;
+      .tag-badge {
+        font-size: 8px;
+        letter-spacing: 0.14em;
+        padding: 3px 8px;
+        margin-bottom: 8px;
       }
 
-      .slide-image {
-        width: 100%;
-        order: 1;
-        position: fixed !important;
-        inset: 0;
-        flex: none;
-        justify-content: center;
-        z-index: 1;
-        margin: 0 !important;
-      }
-
-      .slide-image:not(.hidden) {
-        background:
-          linear-gradient(180deg, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.16) 28%, rgba(0,0,0,0.44) 58%, rgba(0,0,0,0.80) 100%);
-      }
-
-      .slide-image img {
-        max-height: 100vh !important;
-        max-width: 100vw !important;
-        position: fixed;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-        border-radius: 0;
-        box-shadow: none;
-        z-index: 0;
-        filter: brightness(0.68) saturate(0.94) contrast(1.02);
-      }
-
-      .slide-image.hidden {
-        display: none !important;
-      }
-
-      .slide h2 {
-        font-size: clamp(20px, 6vw, 30px);
-        line-height: 1.04;
-        margin-bottom: 12px;
-        text-shadow: 0 3px 20px rgba(0,0,0,0.45);
+      .slide h2,
+      .hero-text-slide h2 {
+        font-size: clamp(24px, 7.6vw, 34px) !important;
+        line-height: 1.02 !important;
+        letter-spacing: 0.05em !important;
+        margin-bottom: 10px;
       }
 
       .slide .subtitle {
         font-size: 10px;
-        letter-spacing: 0.14em;
-        line-height: 1.45;
-        margin-bottom: 12px;
+        line-height: 1.42;
+        letter-spacing: 0.12em;
+        margin-bottom: 8px;
       }
 
-      .slide .description {
-        font-size: 13px;
-        line-height: 1.55;
-        color: rgba(240,235,224,0.94);
+      .slide .description,
+      .zeuss-bullets li,
+      .stat-value {
+        font-size: 12px;
+        line-height: 1.5;
       }
 
-      .slide .divider {
-        width: 64px;
-        margin: 12px 0 14px;
+      .slide .description { margin-top: 8px; }
+      .zeuss-bullets { margin-top: 8px; }
+      .zeuss-bullets li { padding: 4px 0; }
+      .divider { width: 52px; margin: 10px 0 10px; }
+
+      .stat-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 10px;
       }
 
-      .subtitle .bullet-item,
-      .description .bullet-item {
-        display: block;
-        margin: 0 0 5px 0;
+      .stat-item { padding: 8px 9px; }
+      .stat-label { font-size: 8px; }
+
+      .nav-buttons { bottom: 20px; }
+      .status { display: none !important; }
+      .page-counter { bottom: 20px; right: 18px; }
+      .scroll-hint { display: none; }
+    }
+
+    @media (max-width: 420px) {
+      .slide-text,
+      .slide.has-image .slide-text,
+      .slide.zeuss-slide.side-by-side .slide-text,
+      .hero-text-slide .slide-text {
+        padding: 16px 16px 18px;
       }
+
+      .slide h2,
+      .hero-text-slide h2 {
+        font-size: clamp(22px, 8vw, 30px) !important;
+      }
+
+      .slide .subtitle { font-size: 9px; }
+      .slide .description,
+      .zeuss-bullets li,
+      .stat-value { font-size: 11.5px; }
     }
 
     .pdf-content {
@@ -382,6 +557,199 @@
       border-radius: 4px;
       box-shadow: 0 10px 40px rgba(201,168,76,0.15);
       animation: fade-up 0.8s ease 0.2s both;
+    }
+
+    /* ---- ZEUSS ENG slides ---- */
+    .zeuss-slide .slide-content {
+      align-items: center;
+    }
+
+    /* Side-by-side layout for ZEUSS ENG slides */
+    .slide.zeuss-slide.side-by-side {
+      justify-content: center !important;
+    }
+
+    .zeuss-slide.side-by-side .slide-content { }
+
+    .zeuss-slide.side-by-side .slide-image { }
+
+    .zeuss-slide.side-by-side .slide-image img { }
+
+    .zeuss-slide.side-by-side .slide-text { }
+
+    .zeuss-slide.side-by-side .slide-text::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0) 30%);
+      opacity: 0.9;
+    }
+
+    /* Stat grid for core data */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+      animation: slide-in 0.8s ease 0.25s both;
+    }
+
+    .stat-item {
+      padding: 10px 12px;
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 8px;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(4px);
+    }
+
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: rgba(201,168,76,0.7);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+
+    .stat-value {
+      font-family: var(--condensed);
+      font-size: clamp(16px, 4vw, 22px);
+      font-weight: 700;
+      color: var(--cream);
+      line-height: 1.1;
+    }
+
+    /* Bullet list for ENG slides */
+    .zeuss-bullets {
+      list-style: none;
+      margin: 12px 0 0;
+      padding: 0;
+      animation: slide-in 0.8s ease 0.2s both;
+    }
+
+    .zeuss-bullets li {
+      padding: 6px 0;
+      font-size: clamp(13px, 2.5vw, 15px);
+      color: rgba(240,235,224,0.88);
+      border-bottom: 1px solid rgba(201,168,76,0.08);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.4;
+    }
+
+    .zeuss-bullets li::before {
+      content: '▸';
+      color: var(--gold);
+      font-size: 10px;
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+
+    .zeuss-bullets li:last-child { border-bottom: none; }
+
+    .zeuss-bullets li.highlight {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* Tag badge */
+    .tag-badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      padding: 4px 10px;
+      border: 1px solid rgba(201,168,76,0.5);
+      color: var(--gold);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      animation: fade-up 0.6s ease both;
+    }
+
+    /* Scan line overlay on ZEUSS slides */
+    .zeuss-slide::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,0) 0px,
+        rgba(0,0,0,0) 3px,
+        rgba(0,0,0,0.04) 4px
+      );
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Hero-text slide (where-others-fail, battleproof etc.) */
+    .hero-text-slide .slide-content {
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .hero-text-slide .slide-text {
+      text-align: center;
+      padding: 32px 28px;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 20px;
+      max-width: 700px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .hero-text-slide h2 {
+      font-size: clamp(36px, 10vw, 80px) !important;
+      line-height: 0.95 !important;
+      letter-spacing: 0.04em !important;
+    }
+
+    .accent-red { color: #E83B3B; font-weight: 600; }
+    .accent-cyan { color: #00D4D4; font-weight: 600; }
+    .accent-green { color: #2ECC71; font-weight: 600; }
+    .accent-gold { color: var(--gold); font-weight: 600; }
+    .accent-purple { color: #9B59B6; font-weight: 600; }
+    .accent-blue { color: #3498DB; font-weight: 600; }
+    
+    /* Highlight keywords */
+    strong { font-weight: 700; }
+    em { font-style: italic; color: rgba(201,168,76,0.95); }
+
+    @media (max-width: 768px) {
+      .stat-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 7px;
+        margin-top: 10px;
+      }
+
+      .stat-item {
+        padding: 8px 10px;
+      }
+
+      .stat-value {
+        font-size: clamp(14px, 4.5vw, 18px);
+      }
+
+      .zeuss-bullets li {
+        font-size: 12px;
+        padding: 5px 0;
+      }
+
+      .hero-text-slide h2 {
+        font-size: clamp(28px, 9vw, 52px) !important;
+      }
+
+      .hero-text-slide .slide-text {
+        padding: 24px 20px;
+        max-width: 85%;
+        border-radius: 16px;
+      }
     }
 
     .slide h1 {
@@ -572,6 +940,7 @@
       .nav-btn {
         padding: 10px 14px;
         font-size: 10px;
+        bottom: 85px;
       }
     }
 
@@ -640,8 +1009,8 @@
 
     @media (max-width: 640px) {
       .status {
-        bottom: 20px;
-        left: 20px;
+        bottom: 95px;
+        left: 14px;
         font-size: 9px;
       }
     }
@@ -709,6 +1078,20 @@
   </div>
 </div>
 
+<!-- Noise grain overlay (ActiveTheory-inspired) -->
+<div id="noiseOverlay" style="
+  position:fixed;inset:0;z-index:999;pointer-events:none;
+  background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/><feColorMatrix type=%22saturate%22 values=%220%22/></filter><rect width=%22200%22 height=%22200%22 filter=%22url(%23n)%22 opacity=%220.08%22/></svg>');
+  mix-blend-mode: overlay;
+  opacity:0.4;
+"></div>
+
+<!-- Scanline overlay -->
+<div id="scanlines" style="
+  position:fixed;inset:0;z-index:998;pointer-events:none;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px, rgba(0,0,0,0.06) 3px);
+"></div>
+
 <div class="presentation" id="presentation">
   <div class="slides-wrapper" id="slidesWrapper">
     <!-- Slides will be populated by JavaScript -->
@@ -752,7 +1135,7 @@
   }
 
   let currentSlide = 0;
-  let totalSlides = 15;
+  let totalSlides = 26;
   let isTransitioning = false;
   let lastScrollTime = 0;
   const scrollDebounce = 300;
@@ -831,130 +1214,347 @@
   animateParticles();
 
 
-function renderTextBlock(textValue, className, tagName = 'div') {
-  if (!textValue) return '';
-  const safeText = String(textValue).trim();
-  if (!safeText) return '';
-  if (safeText.includes(' • ')) {
-    const items = safeText.split(' • ').map(item => item.trim()).filter(Boolean);
-    return `<div class="${className} ${className}--list">${items.map(item => `<span>${item}</span>`).join('')}</div>`;
+  // Asset mapping - uniform image assignment
+  const imageAssets = {
+    // Interceptor slides
+    'threat': 'assets/images/img36.jpg',
+    'traditional': 'assets/images/img41.jpg',
+    'architecture': 'assets/images/img47.jpg',
+    'detection': 'assets/images/img53.jpg',
+    'speed': 'assets/images/img58.jpg',
+    'technical': 'assets/images/img63.jpg',
+    'targeting': 'assets/images/img68.jpg',
+    'interception': 'assets/images/img74.jpg',
+    'advantage': 'assets/images/img79.jpg',
+    'final': 'assets/images/img89.jpg',
+    // ZEUSS ENG slides
+    'soldier': 'assets/images/zeuss_soldier.jpg',
+    'fire': 'assets/images/zeuss_fire.jpg',
+    'command': 'assets/images/zeuss_command.jpg',
+    'mesh': 'assets/images/zeuss_mesh.jpg',
+    'ai': 'assets/images/zeuss_ai.jpg',
+    'drone': 'assets/images/zeuss_drone.jpg',
+    'sentinel': 'assets/images/zeuss_sentinel.jpg',
+    'battle': 'assets/images/zeuss_battle.jpg',
+    'comms': 'assets/images/zeuss_comms.jpg',
+    'water': 'assets/images/zeuss_water.jpg',
+    'underwater': 'assets/images/zeuss_underwater.jpg',
+    'exo': 'assets/images/zeuss_exo.jpg'
+  };
+
+  // Utility: Create slide element with uniform structure
+  function createSlide(config) {
+    const slide = document.createElement('div');
+    const hasImage = !!config.image;
+    const imagePos = config.imagePos || 'right';
+    
+    // Strip HTML tags for alt text
+    const stripHtml = (html) => html ? html.replace(/<[^>]*>/g, '') : '';
+    const altText = stripHtml(config.title) || 'Slide';
+    const tagText = stripHtml(config.tag);
+    
+    slide.className = `slide ${hasImage ? 'has-image' : 'no-image'} ${config.slideClass || ''}`;
+    
+    const textCenterClass = !hasImage || imagePos === 'hidden' ? 'center' : '';
+    const tagBadgeHtml = config.tag ? `<div class="tag-badge">${config.tag}</div>` : '';
+    const subtitleHtml = config.subtitle ? `<div class="subtitle">${config.subtitle}</div>` : '';
+    const dividerHtml = config.title && (config.subtitle || config.description) ? '<div class="divider"></div>' : '';
+    const descriptionHtml = config.description ? `<div class="description">${config.description}</div>` : '';
+    const contentHtml = config.content || '';
+    const imageHtml = hasImage ? `<div class="slide-image ${imagePos}"><img src="${config.image}" alt="${altText}" loading="lazy" decoding="async"></div>` : '';
+    
+    slide.innerHTML = `
+      <div class="graphic-element graphic-circle" style="top: 10%; left: 5%; opacity:0.08;"></div>
+      <div class="graphic-element graphic-morph" style="bottom: 15%; right: 8%; opacity:0.08;"></div>
+      <div class="slide-content">
+        <div class="slide-text ${textCenterClass}">
+          ${tagBadgeHtml}
+          ${config.title ? `<h2>${config.title}</h2>` : ''}
+          ${subtitleHtml}
+          ${dividerHtml}
+          ${descriptionHtml}
+          ${contentHtml}
+        </div>
+        ${imageHtml}
+      </div>
+    `;
+    
+    return slide;
   }
-  return `<${tagName} class="${className}">${safeText}</${tagName}>`;
-}
 
   // Load slides with images and text content
   function loadSlides() {
     const wrapper = document.getElementById('slidesWrapper');
 
-    function escapeHtml(value) {
-      return String(value ?? '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
-    function formatBulletText(value, className) {
-      if (!value) return '';
-      const parts = String(value)
-        .split('•')
-        .map(part => part.trim())
-        .filter(Boolean);
-
-      if (parts.length <= 1) {
-        return `<div class="${className}">${escapeHtml(value)}</div>`;
-      }
-
-      return `<div class="${className}">` +
-        parts.map(part => `<span class="bullet-item">${escapeHtml(part)}</span>`).join('') +
-      `</div>`;
-    }
-
     const slidesData = [
       {
+        tag: 'ZEUSS · DETECTION · TRACKING · INTERCEPTION',
         title: 'INTERCEPTOR',
         subtitle: 'ZEUSS Interceptor is a next-generation autonomous system designed to detect, track, and neutralize aerial threats in real time',
         description: '',
         imagePos: 'hidden',
-        image: null
+        imageKey: null
       },
       {
+        tag: 'THREAT LANDSCAPE',
         title: 'MODERN AERIAL THREATS',
-        subtitle: 'Shahed-class drones • Speed: ~165 km/h • Low altitude / hard to detect • Low-cost, high-impact',
-        description: 'We are facing a new type of threat: low-cost drones capable of bypassing traditional defense systems.',
-        imagePos: 'left',
-        image: 'assets/images/img36.jpg'
+        subtitle: '<span class="accent-red">Shahed-class drones</span> • Speed: <span class="accent-gold">~165 km/h</span> • <span class="accent-cyan">Low altitude / hard to detect</span> • <span class="accent-red">Low-cost, high-impact</span>',
+        description: 'We are facing a new type of threat: <span class="accent-cyan">low-cost drones</span> capable of bypassing traditional defense systems.',
+        imagePos: 'right',
+        imageKey: 'threat'
       },
       {
-        title: 'INEFFICIENCY of TRADITIONAL DEFENCE',
+        tag: 'THE PROBLEM',
+        title: 'INEFFICIENCY OF TRADITIONAL DEFENSE',
         subtitle: 'High cost per interception • Slow response time • Limited coverage',
         description: 'Using high-cost missiles against low-cost drones is not sustainable. You can’t fight a $20,000 drone with a $1M missile.',
-        imagePos: 'right',
-        image: 'assets/images/img41.jpg'
+        imagePos: 'left',
+        imageKey: 'traditional'
       },
       {
+        tag: 'INTEGRATED SOLUTION',
         title: 'ZEUSS SYSTEM ARCHITECTURE',
-        subtitle: 'Detection network (acoustic + AI) • Real-time tracking • Autonomous interceptor',
-        description: 'ZEUSS integrates detection, intelligence, and interception into a single scalable system',
-        imagePos: 'left',
-        image: 'assets/images/img47.jpg'
-      },
-      {
-        title: 'DETECTION → TRACKING → INTERCEPTION',
-        subtitle: 'Acoustic detection (network-based, up to ~15 km) • AI classification • Trajectory prediction • Automatic launch',
-        description: 'ZEUSS does not wait for the threat — it anticipates and intercepts it.',
+        subtitle: '<span class="accent-cyan">Detection network (acoustic + AI)</span> • <span class="accent-cyan">Real-time tracking</span> • <span class="accent-red">Autonomous interceptor</span>',
+        description: 'ZEUSS integrates <span class="accent-cyan">detection</span>, <span class="accent-cyan">intelligence</span>, and <span class="accent-red">interception</span> into a single <span class="accent-gold">scalable system</span>',
         imagePos: 'right',
-        image: 'assets/images/img53.jpg'
+        imageKey: 'architecture'
       },
       {
-        title: '400 KM/H SPEED',
-        subtitle: '',
-        description: '',
+        tag: 'OPERATIONAL FLOW',
+        title: '<span class="accent-cyan">DETECTION</span> → <span class="accent-cyan">TRACKING</span> → <span class="accent-red">INTERCEPTION</span>',
+        subtitle: '<span class="accent-cyan">Acoustic detection (network-based, up to ~15 km)</span> • <span class="accent-cyan">AI classification</span> • <span class="accent-gold">Trajectory prediction</span> • <span class="accent-red">Automatic launch</span>',
+        description: 'ZEUSS does not wait for the threat — it <span class="accent-red">anticipates and intercepts</span> it.',
         imagePos: 'left',
-        image: 'assets/images/img58.jpg'
+        imageKey: 'detection'
       },
       {
+        tag: 'PERFORMANCE',
+        title: '<span class="accent-gold">400 KM/H</span> SPEED',
+        subtitle: 'Fastest response time in the market',
+        description: '<span class="accent-red">Hypersonic interception</span> capability exceeds all <span class="accent-cyan">aerial threats</span>',
+        imagePos: 'right',
+        imageKey: 'speed'
+      },
+      {
+        tag: 'SPECIFICATIONS',
         title: 'TECHNICAL OVERVIEW',
-        subtitle: 'Speed: 400 km/h • Payload: 2 kg • Endurance: 29 minutes (+15) • Modes',
-        description: 'Autonomous AI • Manual control • Sentinel mode • Mesh mode • ZEUSS is faster than the threat',
-        imagePos: 'right',
-        image: 'assets/images/img63.jpg'
+        subtitle: 'Speed: <span class="accent-gold">400 km/h</span> • Payload: <span class="accent-gold">2 kg</span> • Endurance: <span class="accent-gold">29 min</span> • Range: <span class="accent-gold">15+ km</span>',
+        description: '<span class="accent-cyan">Autonomous AI</span> • Manual control • <span class="accent-purple">Sentinel mode</span> • <span class="accent-purple">Mesh mode</span> • <span class="accent-red">ZEUSS is faster than the threat</span>',
+        imagePos: 'left',
+        imageKey: 'technical'
       },
       {
+        tag: 'AI LOCK & TRACK',
         title: 'TARGETING SYSTEM',
-        subtitle: 'Smart Detection & Lock • Acoustic signature recognition • AI-based classification',
-        description: 'Real-time tracking • Target lock & follow • Manual sentinel. The system identifies and locks onto targets based on their unique acoustic signature and geometric radar.',
-        imagePos: 'left',
-        image: 'assets/images/img68.jpg'
-      },
-      {
-        title: 'INTERCEPTION',
-        subtitle: 'Active Neutralization • High-speed interception • Direct engagement • Payload-based neutralization',
-        description: 'ZEUSS physically reaches and neutralizes the target.',
+        subtitle: '<span class="accent-cyan">Smart Detection & Lock</span> • <span class="accent-cyan">Acoustic signature recognition</span> • <span class="accent-cyan">AI-based classification</span>',
+        description: '<span class="accent-cyan">Real-time tracking</span> • <span class="accent-red">Target lock & follow</span>. The system identifies and locks onto targets based on their unique <span class="accent-cyan">acoustic signature</span> and <span class="accent-cyan">geometric radar</span>.',
         imagePos: 'right',
-        image: 'assets/images/img74.jpg'
+        imageKey: 'targeting'
       },
       {
-        title: 'COMPETITIVE ADVANTAGE',
-        subtitle: 'Why ZEUSS Wins',
-        description: 'Faster than target drones • Low-cost interception • Scalable system • Rapid deployment • Passive detection capability',
+        tag: 'ACTIVE NEUTRALIZATION',
+        title: '<span class="accent-red">INTERCEPTION</span>',
+        subtitle: '<span class="accent-red">High-speed interception</span> • <span class="accent-red">Direct engagement</span> • <span class="accent-red">Payload-based neutralization</span>',
+        description: 'ZEUSS <span class="accent-red">physically reaches and neutralizes</span> the target with <span class="accent-gold">precision</span>.',
         imagePos: 'left',
-        image: 'assets/images/img79.jpg'
+        imageKey: 'interception'
       },
       {
-        title: 'DEPLOYMENT',
-        subtitle: 'Applications',
-        description: 'Coastal defense • Critical infrastructure • Military bases • Town building protection • Ports & strategic assets. ZEUSS transforms defense from reactive to active',
+        tag: 'WHY ZEUSS WINS',
+        title: 'COMPETITIVE ADVANTAGE',
+        subtitle: 'Industry-leading capabilities',
+        description: '<span class="accent-red">Faster than target drones</span> • <span class="accent-gold">Low-cost interception</span> • <span class="accent-cyan">Scalable system</span> • <span class="accent-cyan">Rapid deployment</span> • <span class="accent-cyan">Passive detection capability</span>',
+        imagePos: 'right',
+        imageKey: 'advantage'
+      },
+      {
+        tag: 'GLOBAL READINESS',
+        title: 'DEPLOYMENT & APPLICATIONS',
+        subtitle: 'Defense in all environments',
+        description: '<span class="accent-cyan">Coastal defense</span> • <span class="accent-cyan">Critical infrastructure</span> • <span class="accent-cyan">Military bases</span> • <span class="accent-cyan">Urban protection</span> • <span class="accent-cyan">Ports & strategic assets</span>. ZEUSS transforms defense from <span class="accent-cyan">reactive to active</span>.',
         imagePos: 'hidden',
-        image: null
+        imageKey: null
       },
       {
+        tag: 'ZEUSS INTERCEPTOR',
         title: 'BUILT TO INTERCEPT. DESIGNED TO WIN.',
-        subtitle: '',
+        subtitle: 'Next-generation defense system',
         description: '',
         imagePos: 'left',
-        image: 'assets/images/img89.jpg'
+        imageKey: 'final'
+      }
+    ];
+
+    // ---- ZEUSS ENG slides (from brochure PDF) ----
+    const zeussEngSlides = [
+      {
+        type: 'hero-text',
+        title: 'WHERE OTHERS FAIL<br><span class="accent-red">ZEUSS</span> <span class="accent-cyan">SURVIVES</span>',
+        image: null,
+        tag: '<span class="accent-cyan">ZEUSS</span> · <span class="accent-red">SURVIVE</span> · <span class="accent-green">ADAPT</span> · <span class="accent-purple">DOMINATE</span>'
+      },
+      {
+        type: 'feature',
+        tag: '<span class="accent-red">SURVIVABILITY</span>',
+        title: 'BUILT FOR THE <span class="accent-red">IMPOSSIBLE</span>',
+        subtitle: '<span class="accent-red">Fire</span>. <span class="accent-cyan">Water</span>. <span class="accent-purple">Electronic Warfare</span>.',
+        image: 'assets/images/zeuss_fire.jpg',
+        imagePos: 'left',
+        bullets: [
+          { text: 'Survivability up to 60s @ 600–900°C with ceramic & intumescent shielding or BWF PROTEC', highlight: false },
+          { text: 'Internal sensors protected &lt;85°C — tested under thermal profile', highlight: false },
+          { text: 'Ceramic + intumescent coating — OPTIONAL', highlight: false },
+          { text: 'BWF PROTEC SHIELD', highlight: true },
+          { text: 'Onboard Thermal Camera', highlight: false },
+          { text: 'Operates inside burning structures — vision through smoke', highlight: false }
+        ]
+      },
+      {
+        type: 'feature',
+        tag: '<span class="accent-cyan">COMMAND & CONTROL</span>',
+        title: '<span class="accent-gold">TOTAL CONTROL</span>. <span class="accent-cyan">ANYWHERE</span>.',
+        subtitle: '<span class="accent-cyan">ENCRYPTED</span> • <span class="accent-cyan">AUTONOMOUS</span> • <span class="accent-cyan">REAL-TIME</span>',
+        image: 'assets/images/zeuss_command.jpg',
+        imagePos: 'right',
+        bullets: [
+          { text: 'Encrypted SDR mesh link — immune to jammers', highlight: false },
+          { text: 'Remote operation from Command Center', highlight: false },
+          { text: 'Supports autonomous missions', highlight: false },
+          { text: 'Real-time video streaming (HD + thermal)', highlight: false },
+          { text: '<span class="accent-cyan">1.2KM RECOGNITION, TARGETS AND FOLLOW</span>', highlight: true },
+          { text: 'Multi-drone coordination via mesh', highlight: false },
+          { text: 'Fail-safe return if signal lost', highlight: false }
+        ]
+      },
+      {
+        type: 'feature',
+        tag: '<span class="accent-purple">UNDERWATER MESH</span>',
+        title: '<span class="accent-purple">PATENTED</span> <span class="accent-cyan">WAVE MESH LINK</span>',
+        subtitle: '<span class="accent-cyan">ACOUSTIC</span> • <span class="accent-cyan">8KM RANGE</span> • <span class="accent-cyan">SELF-HEALING</span>',
+        image: 'assets/images/zeuss_mesh.jpg',
+        imagePos: 'left',
+        bullets: [
+          { text: 'Medium: Acoustic waves', highlight: false },
+          { text: 'Range underwater: up to 8 km (tested, LoS)', highlight: false },
+          { text: 'Throughput: ~1000 bit/sec', highlight: false },
+          { text: 'Mesh nodes: up to 16 (self-healing)', highlight: false },
+          { text: 'Security: End-to-end encryption', highlight: false },
+          { text: 'Resilience: Anti-jamming & spoofing resistant', highlight: true }
+        ]
+      },
+      {
+        type: 'feature',
+        tag: '<span class="accent-red">AI VISION</span>',
+        title: '<span class="accent-cyan">AI</span> <span class="accent-red">MULTITARGET</span>',
+        subtitle: '<span class="accent-gold">1.2KM RECOGNITION</span> • <span class="accent-gold">50 TARGETS</span> • <span class="accent-gold">ADAPTIVE TRACKING</span>',
+        image: 'assets/images/zeuss_ai.jpg',
+        imagePos: 'right',
+        bullets: [
+          { text: '1.2km Ultra-Long-Range Recognition', highlight: true },
+          { text: 'UP TO 50 TARGET RECOGNITION', highlight: true },
+          { text: 'Continuous tracking of moving targets', highlight: false },
+          { text: 'Trajectory prediction + feature memory dual-mechanism', highlight: false },
+          { text: 'Adaptive Lock-On Tracking — PiP Architecture', highlight: false },
+          { text: '8x digital zoom — real-time environmental analysis', highlight: false },
+          { text: '500M Human recognition', highlight: false }
+        ]
+      },
+      {
+        type: 'stats',
+        tag: '<span class="accent-gold">SPECIFICATIONS</span>',
+        title: '<span class="accent-cyan">CORE</span> <span class="accent-purple">DATA</span>',
+        image: 'assets/images/zeuss_drone.jpg',
+        stats: [
+          { label: 'Weight (Scout)', value: '380–450 g' },
+          { label: 'Weight (THUNDER)', value: '2.5 kg' },
+          { label: 'Max Speed', value: '60 km/h' },
+          { label: 'Endurance', value: '32 min (air)' },
+          { label: 'Depth', value: 'up to 8m' },
+          { label: 'Comm Range', value: '8–16 km' },
+          { label: 'Waterproof', value: 'IP68' },
+          { label: 'Payload', value: '1.8 kg' }
+        ],
+        extra: 'Navigation: GPS + IMU + ToF — Material: Carbon fiber + ceramic fire shield — Sentinel platform'
+      },
+      {
+        type: 'feature',
+        tag: '<span class="accent-purple">AUTONOMOUS GUARD</span>',
+        title: '<span class="accent-purple">SENTINEL</span> <span class="accent-cyan">MODE</span>',
+        subtitle: '<span class="accent-cyan">5KM PERIMETER</span> • <span class="accent-red">ANTI-PIRATE</span> • <span class="accent-red">100% AUTONOMOUS</span>',
+        image: 'assets/images/zeuss_sentinel.jpg',
+        imagePos: 'left',
+        bullets: [
+          { text: '5 km sentinel perimeter', highlight: false },
+          { text: 'Early detection and prevention of ground-based assaults', highlight: false },
+          { text: 'Never sleep — always on', highlight: true },
+          { text: '1.8kg Payload capacity', highlight: false },
+          { text: 'Anti-Pirate Interception', highlight: true },
+          { text: '100% Autonomous operation', highlight: true }
+        ]
+      },
+      {
+        type: 'hero-text',
+        title: '<span class="accent-red">FIRE</span>PROOF.<br><span class="accent-cyan">WATER</span>PROOF.<br><span class="accent-purple">BATTLEPROOF</span>.',
+        image: 'assets/images/zeuss_battle.jpg',
+        tag: '<span class="accent-cyan">ZEUSS</span> · <span class="accent-red">BUILT FOR THE IMPOSSIBLE</span>'
+      },
+      {
+        type: 'feature',
+        tag: '<span class="accent-gold">COMMS</span>',
+        title: '<span class="accent-cyan">UNJAMMABLE</span> <span class="accent-gold">COMMUNICATIONS</span>',
+        subtitle: '<span class="accent-cyan">ENCRYPTED</span> • <span class="accent-cyan">ANTI-JAM</span> • <span class="accent-cyan">MESH NETWORK</span>',
+        image: 'assets/images/zeuss_comms.jpg',
+        imagePos: 'right',
+        bullets: [
+          { text: 'Proprietary SDR geometric modulation', highlight: false },
+          { text: 'Resilient to jamming & spoofing', highlight: true },
+          { text: 'Encrypted self-healing mesh network', highlight: false },
+          { text: 'Dynamic frequency hopping', highlight: false },
+          { text: 'Adaptive spectrum — Multi-path redundancy', highlight: false },
+          { text: 'Self-healing swarm — Real-time telemetry', highlight: false },
+          { text: 'Seamless handover', highlight: false }
+        ]
+      },
+      {
+        type: 'hero-text',
+        title: 'FROM <span class="accent-cyan">SKY</span><br>TO <span class="accent-blue">SEA</span> IN<br><span class="accent-gold">SECONDS</span>',
+        image: 'assets/images/zeuss_water.jpg',
+        tag: '<span class="accent-cyan">ONE DRONE</span> · <span class="accent-cyan">TWO WORLDS</span>'
+      },
+      {
+        type: 'feature',
+        tag: '<span class="accent-cyan">AMPHIBIOUS</span>',
+        title: 'ONE <span class="accent-cyan">DRONE</span>, <span class="accent-cyan">TWO WORLDS</span>',
+        subtitle: 'Where <span class="accent-cyan">Air</span> Meets <span class="accent-blue">Water</span>, <span class="accent-red">ZEUSS</span> Rules.',
+        image: 'assets/images/zeuss_underwater.jpg',
+        imagePos: 'left',
+        bullets: [
+          { text: 'Air ↔ Water in 3 seconds', highlight: true },
+          { text: 'Waterproof IP68 — Depth up to 8m', highlight: false },
+          { text: 'TakeOff and landing from water surface', highlight: false },
+          { text: 'Dual propulsion thrusters', highlight: false },
+          { text: 'Encrypted acoustic mesh underwater — patented ultrasonic modulation', highlight: true },
+          { text: 'Works as relay antenna — Real-time data exchange UW', highlight: false }
+        ]
+      },
+      {
+        type: 'exosystem',
+        tag: '<span class="accent-purple">ACCESSORIES</span>',
+        title: '<span class="accent-red">ZEUSS</span> <span class="accent-cyan">EXOSYSTEM</span>',
+        image: 'assets/images/zeuss_exo.jpg',
+        items: [
+          'Fire Extinguisher Ball Launcher',
+          'Helmet Dock',
+          'Backpack Charger',
+          'Portable Control System',
+          'Sentinel Dock'
+        ]
+      },
+      {
+        type: 'hero-text',
+        title: '<span class="accent-cyan">ZEUSS</span> —<br><span class="accent-red">BEYOND</span> <span class="accent-green">LIMITS</span>',
+        image: 'assets/images/zeuss_final.jpg',
+        tag: '<span class="accent-purple">PATENT</span> <span class="accent-gold">TECHNOLOGY</span> · <span class="accent-cyan">MADE IN UAE</span>'
       }
     ];
 
@@ -989,34 +1589,21 @@ function renderTextBlock(textValue, className, tagName = 'div') {
     `;
     wrapper.appendChild(videoSlide);
 
-    // Content slides with extracted text and associated images
+    // Render Interceptor slides with uniform structure
     slidesData.forEach((content, index) => {
-      const slide = document.createElement('div');
-
-      const hasImage = !!content.image;
-      slide.className = `slide ${hasImage ? 'has-image' : 'no-image'}`;
-      const textClass = !hasImage || content.imagePos === 'hidden' ? 'slide-text center' : 'slide-text';
-      const imageClass = hasImage ? `slide-image ${content.imagePos}` : 'slide-image hidden';
-      const subtitleHtml = content.subtitle ? formatBulletText(content.subtitle, 'subtitle') : '';
-      const dividerHtml = (content.subtitle || content.description) ? '<div class="divider"></div>' : '';
-      const descriptionHtml = content.description ? formatBulletText(content.description, 'description') : '';
-      const imageHtml = hasImage ? `<img src="${content.image}" alt="Slide ${index + 1}" loading="lazy">` : '';
-
-      slide.innerHTML = `
-        <div class="graphic-element graphic-circle" style="top: 10%; left: 5%; opacity:0.08;"></div>
-        <div class="graphic-element graphic-morph" style="bottom: 15%; right: 8%; opacity:0.08;"></div>
-        <div class="slide-content">
-          <div class="${textClass}">
-            <h2>${content.title}</h2>
-            ${subtitleHtml}
-            ${dividerHtml}
-            ${descriptionHtml}
-          </div>
-          <div class="${imageClass}">
-            ${imageHtml}
-          </div>
-        </div>
-      `;
+      const imageUrl = content.imageKey ? imageAssets[content.imageKey] : null;
+      
+      const config = {
+        title: content.title,
+        tag: content.tag,
+        subtitle: content.subtitle,
+        description: content.description,
+        image: imageUrl,
+        imagePos: content.imagePos,
+        slideClass: 'zeuss-slide'
+      };
+      
+      const slide = createSlide(config);
       wrapper.appendChild(slide);
 
       document.getElementById('loading').innerHTML = `
@@ -1029,7 +1616,95 @@ function renderTextBlock(textValue, className, tagName = 'div') {
       `;
     });
 
-    totalSlides = 1 + slidesData.length;
+    // ---- Render ZEUSS ENG slides ----
+    zeussEngSlides.forEach((s, index) => {
+      const el = document.createElement('div');
+      const imgSrc = s.image || '';
+      
+      // Strip HTML tags for alt text
+      const stripHtml = (html) => html ? html.replace(/<[^>]*>/g, '') : '';
+      const tagAlt = stripHtml(s.tag);
+      const titleAlt = stripHtml(s.title);
+
+      if (s.type === 'hero-text') {
+        const hasHeroImage = !!s.image;
+        el.className = `slide ${hasHeroImage ? 'has-image' : 'no-image'} zeuss-slide hero-text-slide`;
+        el.innerHTML = `
+          ${hasHeroImage ? `<div class="slide-image left"><img src="${imgSrc}" alt="${tagAlt}" loading="lazy" decoding="async"></div>` : ''}
+          <div class="slide-content">
+            <div class="slide-text">
+              ${s.tag ? `<div class="tag-badge">${s.tag}</div>` : ''}
+              <h2>${s.title}</h2>
+            </div>
+          </div>
+        `;
+      } else if (s.type === 'feature') {
+        const bulletsHtml = (s.bullets || []).map((b, i) =>
+          `<li class="${b.highlight ? 'highlight' : ''}" style="animation-delay:${0.3 + i * 0.05}s;">${b.text}</li>`
+        ).join('');
+        const imgPos = index % 2 === 0 ? 'left' : 'right';
+        el.className = `slide has-image zeuss-slide side-by-side`;
+        el.innerHTML = `
+          <div class="slide-image ${imgPos}">
+            <img src="${imgSrc}" alt="${titleAlt}" loading="lazy" decoding="async">
+          </div>
+          <div class="slide-content">
+            <div class="slide-text">
+              ${s.tag ? `<div class="tag-badge">${s.tag}</div>` : ''}
+              <h2>${s.title}</h2>
+              ${s.subtitle ? `<div class="subtitle">${s.subtitle}</div>` : ''}
+              <div class="divider"></div>
+              <ul class="zeuss-bullets">${bulletsHtml}</ul>
+            </div>
+          </div>
+        `;
+      } else if (s.type === 'stats') {
+        const statsHtml = (s.stats || []).map(st =>
+          `<div class="stat-item">
+            <div class="stat-label">${st.label}</div>
+            <div class="stat-value">${st.value}</div>
+          </div>`
+        ).join('');
+        el.className = 'slide has-image zeuss-slide side-by-side';
+        el.innerHTML = `
+          <div class="slide-image right">
+            <img src="${imgSrc}" alt="${titleAlt}" loading="lazy" decoding="async">
+          </div>
+          <div class="slide-content">
+            <div class="slide-text">
+              ${s.tag ? `<div class="tag-badge">${s.tag}</div>` : ''}
+              <h2>${s.title}</h2>
+              <div class="divider"></div>
+              <div class="stat-grid">${statsHtml}</div>
+              ${s.extra ? `<div class="description" style="margin-top:12px;font-size:12px;opacity:0.7;">${s.extra}</div>` : ''}
+            </div>
+          </div>
+        `;
+      } else if (s.type === 'exosystem') {
+        const itemsHtml = (s.items || []).map((item, i) =>
+          `<li style="animation-delay:${0.3 + i * 0.06}s;">${item}</li>`
+        ).join('');
+        const imgPos = index % 2 === 0 ? 'left' : 'right';
+        el.className = 'slide has-image zeuss-slide side-by-side';
+        el.innerHTML = `
+          <div class="slide-image ${imgPos}">
+            <img src="${imgSrc}" alt="${s.title}" loading="lazy" decoding="async">
+          </div>
+          <div class="slide-content">
+            <div class="slide-text">
+              ${s.tag ? `<div class="tag-badge">${s.tag}</div>` : ''}
+              <h2>${s.title}</h2>
+              <div class="divider"></div>
+              <ul class="zeuss-bullets">${itemsHtml}</ul>
+            </div>
+          </div>
+        `;
+      }
+
+      wrapper.appendChild(el);
+    });
+
+    totalSlides = 1 + slidesData.length + zeussEngSlides.length;
     document.getElementById('total-pages').textContent = totalSlides;
     document.getElementById('loading').classList.add('hidden');
     slidesLoaded = true;
@@ -1242,6 +1917,21 @@ function renderTextBlock(textValue, className, tagName = 'div') {
         desc.style.animation = `slide-in 0.8s ease 0.2s both`;
       }
     });
+
+    // Touch device: gyroscope-style tilt for ZEUSS slides
+    if (window.DeviceOrientationEvent && window.innerWidth < 768) {
+      window.addEventListener('deviceorientation', (e) => {
+        const activeSlide = document.querySelector('.slide.active');
+        if (!activeSlide) return;
+        const img = activeSlide.querySelector('.slide-image img');
+        if (!img) return;
+
+        const tiltX = Math.max(-10, Math.min(10, e.beta - 45));
+        const tiltY = Math.max(-10, Math.min(10, e.gamma));
+        img.style.transform = `translate(${tiltY * 0.6}px, ${tiltX * 0.4}px) scale(1.06)`;
+        img.style.transition = 'transform 0.1s linear';
+      }, { passive: true });
+    }
   }
 
   // Load slides when page is ready
