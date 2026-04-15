@@ -462,7 +462,7 @@
         position: fixed;
         left: 0;
         right: 0;
-        bottom: 72px;
+        bottom: 74px;
         z-index: 20;
         width: 100%;
         max-width: none;
@@ -474,7 +474,7 @@
         border: none;
         border-top: 1px solid rgba(201,168,76,0.22);
         border-radius: 24px 24px 0 0;
-        background: linear-gradient(180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.62) 18%, rgba(0,0,0,0.90) 48%, rgba(0,0,0,0.98) 100%);
+        background: linear-gradient(180deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.78) 24%, rgba(0,0,0,0.92) 56%, rgba(0,0,0,0.98) 100%);
         box-shadow: none;
         backdrop-filter: blur(10px) saturate(112%);
         -webkit-backdrop-filter: blur(10px) saturate(112%);
@@ -493,14 +493,14 @@
 
       .slide h2,
       .hero-text-slide h2 {
-        font-size: clamp(22px, 7.1vw, 32px) !important;
+        font-size: clamp(24px, 7.6vw, 34px) !important;
         line-height: 1.02 !important;
         letter-spacing: 0.05em !important;
         margin-bottom: 10px;
       }
 
       .slide .subtitle {
-        font-size: 9.5px;
+        font-size: 10px;
         line-height: 1.42;
         letter-spacing: 0.12em;
         margin-bottom: 8px;
@@ -1218,69 +1218,39 @@
     }
 
 
-    .logo-badge {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 18px;
-    }
-
-    .logo-badge img {
-      display: block;
-      max-width: 132px;
-      width: 100%;
-      height: auto;
-      object-fit: contain;
-      filter: drop-shadow(0 6px 18px rgba(0,0,0,0.35));
-    }
-
-    @media (max-width: 768px) {
-      .slide.mobile-focus-right .slide-image img {
-        object-position: 78% center !important;
-      }
-
-      .slide.hero-text-slide .logo-badge img {
-        max-width: 110px;
-      }
-
-      .slide.no-image .slide-text,
-      .slide:not(.no-image) .slide-text.center {
-        max-width: min(92vw, 720px);
-      }
-    }
-
-
 .site-logo-fixed{
   position:fixed;
-  top:18px;
+  top:10px;
   left:50%;
   transform:translateX(-50%);
-  z-index:120;
+  z-index:130;
   pointer-events:none;
 }
 .site-logo-fixed img{
   display:block;
-  width:min(132px,34vw);
+  width:min(120px,34vw);
   height:auto;
   object-fit:contain;
-  filter:drop-shadow(0 8px 20px rgba(0,0,0,.35));
+  filter:drop-shadow(0 8px 18px rgba(0,0,0,.28));
 }
-@media (max-width:768px){
-  .site-logo-fixed{ top:12px; }
-  .site-logo-fixed img{ width:min(110px,30vw); }
-  .slide.mobile-focus-right .slide-image img{
-    object-position: 88% center !important;
+@media (max-width: 768px){
+  .site-logo-fixed{
+    top:8px;
   }
-  .slide.mobile-focus-soft-right .slide-image img{
-    object-position: 68% center !important;
+  .site-logo-fixed img{
+    width:min(104px,30vw);
+  }
+  .slide.mobile-focus-right .slide-image img{
+    object-position: 82% center !important;
+  }
+  .slide.mobile-focus-center .slide-image img{
+    object-position: center center !important;
   }
 }
 
 </style>
 </head>
 <body>
-
-
 
 <div class="loading" id="loading">
   <div>
@@ -1430,9 +1400,9 @@
     'interception': 'assets/images/img74.jpg',
     'advantage': 'assets/images/img79.jpg',
     'final': 'assets/images/img89.jpg',
-    'introMobile': 'assets/images/img74.jpg',
     'deploymentMobile': 'assets/images/img40.jpg',
-    'otherDroneMobile': 'assets/images/img46.jpg',
+    'interceptorMobile': 'assets/images/img74.jpg',
+    'altDroneMobile': 'assets/images/img46.jpg',
     // ZEUSS ENG slides
     'soldier': 'assets/images/zeuss_soldier.jpg',
     'fire': 'assets/images/zeuss_fire.jpg',
@@ -1499,7 +1469,8 @@
         subtitle: 'ZEUSS Interceptor is a next-generation autonomous system designed to detect, track, and neutralize aerial threats in real time',
         description: '',
         imagePos: 'right',
-        imageKey: 'introMobile'
+        imageKey: 'interceptorMobile',
+        slideClass: 'mobile-focus-center'
       },
       {
         tag: 'THREAT LANDSCAPE',
@@ -1579,7 +1550,8 @@
         subtitle: 'Defense in all environments',
         description: '<span class="accent-cyan">Coastal defense</span> • <span class="accent-cyan">Critical infrastructure</span> • <span class="accent-cyan">Military bases</span> • <span class="accent-cyan">Urban protection</span> • <span class="accent-cyan">Ports & strategic assets</span>. ZEUSS transforms defense from <span class="accent-cyan">reactive to active</span>.',
         imagePos: 'right',
-        imageKey: 'deploymentMobile'
+        imageKey: 'deploymentMobile',
+        slideClass: 'mobile-focus-center'
       },
       {
         tag: 'ZEUSS INTERCEPTOR',
@@ -1599,8 +1571,7 @@
         title: 'WHERE OTHERS FAIL<br><span class="accent-red">ZEUSS</span> <span class="accent-cyan">SURVIVES</span>',
         image: 'assets/images/img46.jpg',
         tag: '<span class="accent-cyan">SECOND PLATFORM</span> · <span class="accent-gold">DIFFERENT DRONE AIRFRAME</span>',
-        subtitle: 'This slide showcases a <span class="accent-cyan">different ZEUSS drone</span>, distinct from the interceptor shown in the previous slides.',
-        slideClass: 'mobile-focus-soft-right'
+        subtitle: 'A separate ZEUSS drone platform, distinct from the interceptor shown earlier.'
       },
       {
         type: 'feature',
@@ -1809,7 +1780,7 @@
         description: content.description,
         image: imageUrl,
         imagePos: content.imagePos,
-        slideClass: `zeuss-slide ${content.slideClass || ''}`
+        slideClass: 'zeuss-slide'
       };
       
       const slide = createSlide(config);
@@ -1863,7 +1834,6 @@
               ${s.tag ? `<div class="tag-badge">${s.tag}</div>` : ''}
               <h2>${s.title}</h2>
               ${s.subtitle ? `<div class="subtitle">${s.subtitle}</div>` : ''}
-              ${s.subtitle ? `<div class="subtitle">${s.subtitle}</div>` : ''}
               <div class="divider"></div>
               <ul class="zeuss-bullets">${bulletsHtml}</ul>
             </div>
@@ -1885,7 +1855,6 @@
             <div class="slide-text">
               ${s.tag ? `<div class="tag-badge">${s.tag}</div>` : ''}
               <h2>${s.title}</h2>
-              ${s.subtitle ? `<div class="subtitle">${s.subtitle}</div>` : ''}
               <div class="divider"></div>
               <div class="stat-grid">${statsHtml}</div>
               ${s.extra ? `<div class="description" style="margin-top:12px;font-size:12px;opacity:0.7;">${s.extra}</div>` : ''}
@@ -1906,7 +1875,6 @@
             <div class="slide-text">
               ${s.tag ? `<div class="tag-badge">${s.tag}</div>` : ''}
               <h2>${s.title}</h2>
-              ${s.subtitle ? `<div class="subtitle">${s.subtitle}</div>` : ''}
               <div class="divider"></div>
               <ul class="zeuss-bullets">${itemsHtml}</ul>
             </div>
