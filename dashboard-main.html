@@ -418,36 +418,39 @@
       .slide.zeuss-slide.side-by-side,
       .zeuss-slide.side-by-side .slide-content,
       .hero-text-slide .slide-content {
-        display: block;
+        display: flex;
+        flex-direction: column;
         width: 100%;
         max-width: 100%;
-        min-height: 100vh;
         gap: 0;
       }
 
       .slide-image,
       .slide.zeuss-slide.side-by-side .slide-image {
-        position: fixed !important;
-        inset: 0;
+        position: relative !important;
         width: 100%;
-        height: 100%;
-        max-width: none;
+        height: auto;
+        max-width: 100%;
         margin: 0 !important;
         z-index: 1;
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 300px;
+        max-height: 60vh;
+        overflow: hidden;
       }
 
       .slide-image img,
       .slide.zeuss-slide.side-by-side .slide-image img,
       .hero-text-slide .slide-image img,
       .zeuss-slide .slide-image img {
-        position: absolute;
-        inset: 0;
+        position: relative;
         width: 100%;
         height: 100%;
-        max-width: none !important;
-        max-height: none !important;
-        object-fit: cover;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        object-fit: contain;
         object-position: center center;
         border-radius: 0;
         box-shadow: none;
@@ -459,25 +462,25 @@
       .slide.has-image .slide-text,
       .slide.has-image.hero-text-slide .slide-text,
       .slide.has-image.zeuss-slide.side-by-side .slide-text {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 74px;
+        position: relative;
+        left: auto;
+        right: auto;
+        bottom: auto;
         z-index: 20;
         width: 100%;
-        max-width: none;
-        max-height: none;
-        min-height: 0;
-        overflow: visible;
+        max-width: 100%;
         margin: 0;
         padding: 14px 16px 16px;
         border: none;
         border-top: 1px solid rgba(201,168,76,0.22);
-        border-radius: 24px 24px 0 0;
+        border-radius: 0;
         background: linear-gradient(180deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.78) 24%, rgba(0,0,0,0.92) 56%, rgba(0,0,0,0.98) 100%);
         box-shadow: none;
         backdrop-filter: blur(10px) saturate(112%);
         -webkit-backdrop-filter: blur(10px) saturate(112%);
+        overflow: visible;
+        min-height: auto;
+        max-height: none;
       }
 
       .slide-text.center {
@@ -1306,7 +1309,7 @@
     border-top:1px solid rgba(201,168,76,0.18) !important;
     border-radius:0 !important;
     padding:14px 16px 62px !important;
-    background:linear-gradient(180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.62) 18%, rgba(0,0,0,0.90) 48%, rgba(0,0,0,0.98) 100%) !important;
+    background: linear-gradient(180deg, rgba(8,8,8,0.96) 0%, rgba(4,4,4,0.98) 42%, rgba(0,0,0,0.995) 100%) !important;
     box-shadow:none !important;
     backdrop-filter:blur(8px) saturate(110%) !important;
     -webkit-backdrop-filter:blur(8px) saturate(110%) !important;
@@ -1410,7 +1413,7 @@
     min-height:34vh !important;
     overflow-y:auto !important;
     overflow-x:hidden !important;
-    background:linear-gradient(180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.72) 14%, rgba(0,0,0,0.93) 34%, rgba(0,0,0,0.99) 100%) !important;
+    background: linear-gradient(180deg, rgba(8,8,8,0.96) 0%, rgba(4,4,4,0.985) 38%, rgba(0,0,0,0.995) 100%) !important;
     box-shadow:none !important;
     backdrop-filter:blur(8px) saturate(110%) !important;
     -webkit-backdrop-filter:blur(8px) saturate(110%) !important;
@@ -1572,6 +1575,403 @@
       box-shadow: 0 0 0 rgba(0,212,212,0), 0 0 28px rgba(0,212,212,0.08);
     }
 
+
+
+/* Mobile fix: image fully visible above text panel, desktop unchanged */
+@media (max-width: 768px){
+  .slide.has-image:not(.no-image){
+    --mobile-text-panel-height: 34vh;
+  }
+
+  .slide.has-image:not(.no-image) .slide-image,
+  .slide.has-image.hero-text-slide .slide-image,
+  .slide.has-image.zeuss-slide.side-by-side .slide-image{
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: 0 !important;
+    bottom: auto !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: calc(100vh - var(--mobile-text-panel-height)) !important;
+    max-width: 100% !important;
+    max-height: calc(100vh - var(--mobile-text-panel-height)) !important;
+    margin: 0 !important;
+    background: #000 !important;
+    z-index: 1 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+  }
+
+  .slide.has-image:not(.no-image) .slide-image img,
+  .slide.has-image.hero-text-slide .slide-image img,
+  .slide.has-image.zeuss-slide.side-by-side .slide-image img{
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    object-position: center top !important;
+    border-radius: 0 !important;
+    clip-path: none !important;
+    background: #000 !important;
+    display: block !important;
+  }
+
+  .slide.has-image:not(.no-image) .slide-text,
+  .slide.has-image.hero-text-slide .slide-text,
+  .slide.has-image.zeuss-slide.side-by-side .slide-text{
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-height: auto !important;
+    max-height: 70vh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    z-index: 20 !important;
+  }
+}
+
+
+
+/* ---- MOBILE IMAGE ABOVE PANEL FINAL OVERRIDE ---- */
+@media (max-width: 768px){
+  .slide.has-image:not(.no-image){
+    padding: 0 0 96px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  .slide.has-image:not(.no-image) .slide-content,
+  .slide.has-image.hero-text-slide .slide-content,
+  .slide.has-image.zeuss-slide.side-by-side .slide-content{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    justify-content:flex-start !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-height:auto !important;
+    gap:14px !important;
+    padding:56px 0 0 !important;
+  }
+
+  .slide.has-image:not(.no-image) .slide-image,
+  .slide.has-image.hero-text-slide .slide-image,
+  .slide.has-image.zeuss-slide.side-by-side .slide-image{
+    order:1 !important;
+    position:relative !important;
+    inset:auto !important;
+    left:auto !important;
+    right:auto !important;
+    top:auto !important;
+    bottom:auto !important;
+    width:100% !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    margin:0 !important;
+    padding:0 16px !important;
+    background:transparent !important;
+    z-index:1 !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    overflow:visible !important;
+  }
+
+  .slide.has-image:not(.no-image) .slide-image img,
+  .slide.has-image.hero-text-slide .slide-image img,
+  .slide.has-image.zeuss-slide.side-by-side .slide-image img,
+  .hero-text-slide .slide-image img,
+  .zeuss-slide .slide-image img{
+    position:relative !important;
+    inset:auto !important;
+    width:auto !important;
+    height:auto !important;
+    max-width:100% !important;
+    max-height:36vh !important;
+    object-fit:contain !important;
+    object-position:center center !important;
+    border-radius:14px !important;
+    box-shadow:0 12px 36px rgba(0,0,0,0.24) !important;
+    clip-path:none !important;
+    background:transparent !important;
+    display:block !important;
+    margin:0 auto !important;
+  }
+
+  .slide.has-image:not(.no-image) .slide-text,
+  .slide.has-image.hero-text-slide .slide-text,
+  .slide.has-image.zeuss-slide.side-by-side .slide-text{
+    order:2 !important;
+    position:relative !important;
+    left:auto !important;
+    right:auto !important;
+    top:auto !important;
+    bottom:auto !important;
+    transform:none !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-height:auto !important;
+    margin:0 !important;
+    padding:18px 16px 76px !important;
+    border:none !important;
+    border-top:1px solid rgba(201,168,76,0.18) !important;
+    border-radius:0 !important;
+    background:linear-gradient(180deg, rgba(10,10,10,0.98) 0%, rgba(4,4,4,0.99) 100%) !important;
+    box-shadow:none !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+    overflow:visible !important;
+    z-index:2 !important;
+  }
+
+  .slide.has-image:not(.no-image) .divider,
+  .slide.has-image.hero-text-slide .divider,
+  .slide.has-image.zeuss-slide.side-by-side .divider{
+    margin-left:0 !important;
+    margin-right:auto !important;
+  }
+}
+
+
+
+/* ---- MOBILE IMAGE/PANEL FINAL FIX ---- */
+@media (max-width: 768px){
+  .slide.has-image:not(.no-image),
+  .slide.has-image.hero-text-slide,
+  .slide.has-image.zeuss-slide.side-by-side,
+  .slide.zeuss-slide.side-by-side,
+  .slide.hero-text-slide{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    padding: 12px 0 96px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  .slide.has-image:not(.no-image) .slide-image,
+  .slide.has-image.hero-text-slide .slide-image,
+  .slide.has-image.zeuss-slide.side-by-side .slide-image,
+  .slide.zeuss-slide.side-by-side .slide-image,
+  .slide.hero-text-slide .slide-image{
+    order: 0 !important;
+    position: relative !important;
+    inset: auto !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: clamp(180px, 28vh, 250px) !important;
+    min-height: 180px !important;
+    max-height: 250px !important;
+    margin: 4px 0 8px !important;
+    padding: 0 16px !important;
+    background: transparent !important;
+    overflow: visible !important;
+    z-index: 1 !important;
+    flex: 0 0 auto !important;
+    perspective: none !important;
+  }
+
+  .slide.has-image:not(.no-image) .slide-image img,
+  .slide.has-image.hero-text-slide .slide-image img,
+  .slide.has-image.zeuss-slide.side-by-side .slide-image img,
+  .slide.zeuss-slide.side-by-side .slide-image img,
+  .slide.hero-text-slide .slide-image img{
+    position: relative !important;
+    inset: auto !important;
+    width: auto !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    display: block !important;
+    margin: 0 auto !important;
+    border-radius: 18px !important;
+    background: transparent !important;
+    box-shadow: 0 16px 36px rgba(0,0,0,0.28) !important;
+    clip-path: none !important;
+    filter: none !important;
+    transform: none !important;
+  }
+
+  .slide.has-image:not(.no-image) .slide-content,
+  .slide.has-image.hero-text-slide .slide-content,
+  .slide.has-image.zeuss-slide.side-by-side .slide-content,
+  .slide.zeuss-slide.side-by-side .slide-content,
+  .slide.hero-text-slide .slide-content{
+    order: 1 !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    flex: 0 0 auto !important;
+  }
+
+  .slide.has-image:not(.no-image) .slide-text,
+  .slide.has-image.hero-text-slide .slide-text,
+  .slide.has-image.zeuss-slide.side-by-side .slide-text,
+  .slide.zeuss-slide.side-by-side .slide-text,
+  .slide.hero-text-slide .slide-text{
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 16px 16px 72px !important;
+    z-index: 2 !important;
+    border: none !important;
+    border-top: 1px solid rgba(201,168,76,0.18) !important;
+    border-radius: 0 !important;
+    background: linear-gradient(180deg, rgba(8,8,8,0.94) 0%, rgba(4,4,4,0.985) 38%, rgba(0,0,0,0.995) 100%) !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .slide.has-image:not(.no-image) .slide-text::after,
+  .slide.has-image.hero-text-slide .slide-text::after,
+  .slide.has-image.zeuss-slide.side-by-side .slide-text::after,
+  .slide.zeuss-slide.side-by-side .slide-text::after,
+  .slide.hero-text-slide .slide-text::after{
+    display: none !important;
+  }
+}
+
+
+
+@media (max-width: 768px){
+  /* SECOND PART ONLY: ZEUSS slides use stacked mobile layout */
+  .slide.zeuss-slide {
+    padding: 14px 12px 86px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+  }
+
+  .slide.has-image.zeuss-slide.side-by-side,
+  .slide.zeuss-slide.hero-text-slide.has-image {
+    display: block !important;
+  }
+
+  .slide.has-image.zeuss-slide.side-by-side .slide-content,
+  .slide.zeuss-slide.hero-text-slide.has-image .slide-content {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+  }
+
+  .slide.has-image.zeuss-slide.side-by-side .slide-image,
+  .slide.zeuss-slide.hero-text-slide.has-image .slide-image {
+    position: relative !important;
+    inset: auto !important;
+    display: flex !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 auto !important;
+    z-index: 1 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: visible !important;
+    background: transparent !important;
+    order: 1 !important;
+    flex: 0 0 auto !important;
+    animation: none !important;
+    perspective: none !important;
+  }
+
+  .slide.has-image.zeuss-slide.side-by-side .slide-image img,
+  .slide.zeuss-slide.hero-text-slide.has-image .slide-image img {
+    position: relative !important;
+    inset: auto !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: 30vh !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    border-radius: 18px !important;
+    box-shadow: 0 18px 38px rgba(0,0,0,0.28) !important;
+    clip-path: none !important;
+    margin: 0 auto !important;
+    background: #000 !important;
+    filter: none !important;
+    animation: none !important;
+  }
+
+  .slide.has-image.zeuss-slide.side-by-side .slide-text,
+  .slide.zeuss-slide.hero-text-slide.has-image .slide-text {
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    order: 2 !important;
+    z-index: 2 !important;
+    padding: 18px 16px 14px !important;
+    border: 1px solid rgba(201,168,76,0.18) !important;
+    border-radius: 20px !important;
+    background: linear-gradient(180deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.94) 100%) !important;
+    box-shadow: 0 18px 44px rgba(0,0,0,0.22) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    overflow: visible !important;
+    min-height: auto !important;
+  }
+
+  .slide.has-image.zeuss-slide.side-by-side .slide-text::after,
+  .slide.zeuss-slide.hero-text-slide.has-image .slide-text::after {
+    display: none !important;
+  }
+
+  .slide.zeuss-slide .nav-buttons,
+  .nav-buttons {
+    bottom: 14px !important;
+  }
+
+  .slide.zeuss-slide .page-counter,
+  .page-counter {
+    bottom: 18px !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1705,6 +2105,7 @@
     window.addEventListener('resize', () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      updateMobileImageLayout();
     });
 
     animateParticles();
@@ -1724,9 +2125,9 @@
     'interception': 'assets/images/img74.jpg',
     'advantage': 'assets/images/img79.jpg',
     'final': 'assets/images/img89.jpg',
-    'deploymentMobile': 'assets/images/img40.jpg',
-    'interceptorMobile': 'assets/images/img74.jpg',
-    'altDroneMobile': 'assets/images/img46.jpg',
+    'deploymentMobile': 'assets/images/img63.jpg',
+    'interceptorMobile': 'assets/images/img79.jpg',
+    'altDroneMobile': 'assets/images/img29.jpg',
     // ZEUSS ENG slides
     'soldier': 'assets/images/zeuss_soldier.jpg',
     'fire': 'assets/images/zeuss_fire.jpg',
@@ -1780,6 +2181,20 @@
     `;
     
     return slide;
+  }
+
+
+
+  function updateMobileImageLayout() {
+    if (!window.matchMedia('(max-width: 768px)').matches) return;
+    document.querySelectorAll('.slide.has-image:not(.no-image)').forEach(slide => {
+      const textPanel = slide.querySelector('.slide-text');
+      if (!textPanel) return;
+      const panelHeight = Math.ceil(textPanel.getBoundingClientRect().height || 0);
+      if (panelHeight > 0) {
+        slide.style.setProperty('--mobile-text-panel-height', panelHeight + 'px');
+      }
+    });
   }
 
   // Load slides with images and text content
@@ -1893,7 +2308,7 @@
       {
         type: 'hero-text',
         title: 'WHERE OTHERS FAIL<br><span class="accent-red">ZEUSS</span> <span class="accent-cyan">SURVIVES</span>',
-        image: 'assets/images/img46.jpg',
+        image: 'assets/images/img29.jpg',
         tag: '<span class="accent-cyan">SECOND PLATFORM</span> · <span class="accent-gold">DIFFERENT DRONE AIRFRAME</span>',
         subtitle: 'A separate ZEUSS drone platform, distinct from the interceptor shown earlier.',
         
@@ -1903,7 +2318,7 @@
         tag: '<span class="accent-red">SURVIVABILITY</span>',
         title: 'BUILT FOR THE <span class="accent-red">IMPOSSIBLE</span>',
         subtitle: '<span class="accent-red">Fire</span>. <span class="accent-cyan">Water</span>. <span class="accent-purple">Electronic Warfare</span>.',
-        image: 'assets/images/zeuss_fire.jpg',
+        image: 'assets/images/img35.jpg',
         imagePos: 'left',
         bullets: [
           { text: 'Survivability up to 60s @ 600–900°C with ceramic & intumescent shielding or BWF PROTEC', highlight: false },
@@ -1919,7 +2334,7 @@
         tag: '<span class="accent-cyan">COMMAND & CONTROL</span>',
         title: '<span class="accent-gold">TOTAL CONTROL</span>. <span class="accent-cyan">ANYWHERE</span>.',
         subtitle: '<span class="accent-cyan">ENCRYPTED</span> • <span class="accent-cyan">AUTONOMOUS</span> • <span class="accent-cyan">REAL-TIME</span>',
-        image: 'assets/images/zeuss_command.jpg',
+        image: 'assets/images/img40.jpg',
         imagePos: 'right',
         bullets: [
           { text: 'Encrypted SDR mesh link — immune to jammers', highlight: false },
@@ -1936,7 +2351,7 @@
         tag: '<span class="accent-purple">UNDERWATER MESH</span>',
         title: '<span class="accent-purple">PATENTED</span> <span class="accent-cyan">WAVE MESH LINK</span>',
         subtitle: '<span class="accent-cyan">ACOUSTIC</span> • <span class="accent-cyan">8KM RANGE</span> • <span class="accent-cyan">SELF-HEALING</span>',
-        image: 'assets/images/zeuss_mesh.jpg',
+        image: 'assets/images/zeuss_command.jpg',
         imagePos: 'left',
         bullets: [
           { text: 'Medium: Acoustic waves', highlight: false },
@@ -1952,7 +2367,7 @@
         tag: '<span class="accent-red">AI VISION</span>',
         title: '<span class="accent-cyan">AI</span> <span class="accent-red">MULTITARGET</span>',
         subtitle: '<span class="accent-gold">1.2KM RECOGNITION</span> • <span class="accent-gold">50 TARGETS</span> • <span class="accent-gold">ADAPTIVE TRACKING</span>',
-        image: 'assets/images/zeuss_ai.jpg',
+        image: 'assets/images/img52.jpg',
         imagePos: 'right',
         bullets: [
           { text: '1.2km Ultra-Long-Range Recognition', highlight: true },
@@ -1968,7 +2383,7 @@
         type: 'stats',
         tag: '<span class="accent-gold">SPECIFICATIONS</span>',
         title: '<span class="accent-cyan">CORE</span> <span class="accent-purple">DATA</span>',
-        image: 'assets/images/zeuss_drone.jpg',
+        image: 'assets/images/img110.jpg',
         stats: [
           { label: 'Weight (Scout)', value: '380–450 g' },
           { label: 'Weight (THUNDER)', value: '2.5 kg' },
@@ -1986,7 +2401,7 @@
         tag: '<span class="accent-purple">AUTONOMOUS GUARD</span>',
         title: '<span class="accent-purple">SENTINEL</span> <span class="accent-cyan">MODE</span>',
         subtitle: '<span class="accent-cyan">5KM PERIMETER</span> • <span class="accent-red">ANTI-PIRATE</span> • <span class="accent-red">100% AUTONOMOUS</span>',
-        image: 'assets/images/zeuss_sentinel.jpg',
+        image: 'assets/images/zeuss_battle.jpg',
         imagePos: 'left',
         bullets: [
           { text: '5 km sentinel perimeter', highlight: false },
@@ -2000,7 +2415,7 @@
       {
         type: 'hero-text',
         title: '<span class="accent-red">FIRE</span>PROOF.<br><span class="accent-cyan">WATER</span>PROOF.<br><span class="accent-purple">BATTLEPROOF</span>.',
-        image: 'assets/images/zeuss_battle.jpg',
+        image: 'assets/images/img71.jpg',
         tag: '<span class="accent-cyan">ZEUSS</span> · <span class="accent-red">BUILT FOR THE IMPOSSIBLE</span>'
       },
       {
@@ -2008,7 +2423,7 @@
         tag: '<span class="accent-gold">COMMS</span>',
         title: '<span class="accent-cyan">UNJAMMABLE</span> <span class="accent-gold">COMMUNICATIONS</span>',
         subtitle: '<span class="accent-cyan">ENCRYPTED</span> • <span class="accent-cyan">ANTI-JAM</span> • <span class="accent-cyan">MESH NETWORK</span>',
-        image: 'assets/images/zeuss_comms.jpg',
+        image: 'assets/images/img64.jpg',
         imagePos: 'right',
         bullets: [
           { text: 'Proprietary SDR geometric modulation', highlight: false },
@@ -2023,7 +2438,7 @@
       {
         type: 'hero-text',
         title: 'FROM <span class="accent-cyan">SKY</span><br>TO <span class="accent-blue">SEA</span> IN<br><span class="accent-gold">SECONDS</span>',
-        image: 'assets/images/zeuss_water.jpg',
+        image: 'assets/images/img82.jpg',
         tag: '<span class="accent-cyan">ONE DRONE</span> · <span class="accent-cyan">TWO WORLDS</span>'
       },
       {
@@ -2031,7 +2446,7 @@
         tag: '<span class="accent-cyan">AMPHIBIOUS</span>',
         title: 'ONE <span class="accent-cyan">DRONE</span>, <span class="accent-cyan">TWO WORLDS</span>',
         subtitle: 'Where <span class="accent-cyan">Air</span> Meets <span class="accent-blue">Water</span>, <span class="accent-red">ZEUSS</span> Rules.',
-        image: 'assets/images/zeuss_underwater.jpg',
+        image: 'assets/images/img86.jpg',
         imagePos: 'left',
         bullets: [
           { text: 'Air ↔ Water in 3 seconds', highlight: true },
@@ -2046,7 +2461,7 @@
         type: 'exosystem',
         tag: '<span class="accent-purple">ACCESSORIES</span>',
         title: '<span class="accent-red">ZEUSS</span> <span class="accent-cyan">EXOSYSTEM</span>',
-        image: 'assets/images/zeuss_exo.jpg',
+        image: 'assets/images/zeuss_final.jpg',
         items: [
           'Fire Extinguisher Ball Launcher',
           'Helmet Dock',
@@ -2058,8 +2473,8 @@
       {
         type: 'hero-text',
         title: '<span class="accent-cyan">ZEUSS</span> —<br><span class="accent-red">BEYOND</span> <span class="accent-green">LIMITS</span>',
-        image: 'assets/images/zeuss_final.jpg',
-        tag: '<span class="accent-purple">PATENT</span> <span class="accent-gold">TECHNOLOGY</span> · <span class="accent-cyan">MADE IN UAE</span>'
+        image: 'assets/images/img110.jpg',
+        tag: '<span class="accent-purple">PATENT</span> <span class="accent-gold">TECHNOLOGY</span>'
       }
     ];
 
@@ -2215,6 +2630,7 @@
     document.getElementById('total-pages').textContent = totalSlides;
     document.getElementById('loading').classList.add('hidden');
     slidesLoaded = true;
+    updateMobileImageLayout();
     setupEventListeners();
     setupParallaxEffect();
     setupVideoStability();
@@ -2274,6 +2690,10 @@
     // Mostra la nuova slide
     if (slides[n]) {
       slides[n].classList.add('active');
+      slides[n].scrollTop = 0;
+      const innerScrollable = slides[n].querySelector('.slide-text');
+      if (innerScrollable) innerScrollable.scrollTop = 0;
+      window.scrollTo(0, 0);
       // Trigger reflow per animazione
       void slides[n].offsetWidth;
     }
