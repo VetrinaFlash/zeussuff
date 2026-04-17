@@ -1020,6 +1020,8 @@
       font-size: 11px;
       text-align: center;
       overflow: hidden;
+      text-decoration: none;
+      line-height: 1.05;
     }
 
     .float-btn:hover {
@@ -2076,6 +2078,117 @@
   }
 }
 
+@media (max-width: 768px){
+  .slide.mobile-text-centered{
+    padding:18px 0 96px !important;
+    overflow:hidden !important;
+  }
+
+  .slide.mobile-text-centered .slide-content{
+    min-height:calc(100vh - 132px) !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:center !important;
+    align-items:center !important;
+    gap:16px !important;
+  }
+
+  .slide.mobile-text-centered .slide-image{
+    margin:0 auto !important;
+    height:clamp(200px, 29vh, 250px) !important;
+    align-self:center !important;
+  }
+
+  .slide.mobile-text-centered .slide-text{
+    margin:0 auto !important;
+  }
+}
+
+
+@media (max-width: 768px){
+  .slide.mobile-text-centered{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    padding:18px 0 96px !important;
+    overflow:hidden !important;
+  }
+
+  .slide.mobile-text-centered .slide-content{
+    flex:0 0 auto !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-height:auto !important;
+    margin:auto 0 !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:18px !important;
+  }
+
+  .slide.mobile-text-centered .slide-image{
+    width:calc(100% - 28px) !important;
+    margin:0 auto !important;
+    height:clamp(190px, 28vh, 240px) !important;
+    min-height:0 !important;
+    max-height:none !important;
+    align-self:center !important;
+    flex:0 0 auto !important;
+  }
+
+  .slide.mobile-text-centered .slide-text{
+    width:calc(100% - 28px) !important;
+    margin:0 auto !important;
+    flex:0 0 auto !important;
+  }
+
+  .float-nav{
+    z-index:160 !important;
+  }
+
+  .float-btn{
+    pointer-events:auto !important;
+  }
+}
+
+
+
+@media (max-width: 768px){
+  .slide.mobile-balance-center{
+    padding:0 0 96px !important;
+    overflow:hidden !important;
+  }
+
+  .slide.mobile-balance-center .slide-content{
+    width:100% !important;
+    max-width:100% !important;
+    height:calc(100svh - 96px) !important;
+    min-height:calc(100svh - 96px) !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:18px !important;
+    transform:translateY(32px) !important;
+    padding:0 !important;
+    margin:0 !important;
+  }
+
+  .slide.mobile-balance-center .slide-image{
+    width:calc(100% - 28px) !important;
+    height:clamp(190px, 27vh, 235px) !important;
+    margin:0 auto !important;
+    flex:0 0 auto !important;
+  }
+
+  .slide.mobile-balance-center .slide-text{
+    width:calc(100% - 28px) !important;
+    margin:0 auto !important;
+    flex:0 0 auto !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2115,7 +2228,8 @@
 
 <div class="float-nav">
   <button class="float-btn" id="first-slide" title="Go to first slide">⇤<br>FIRST</button>
-  <button class="float-btn" id="logout" title="Exit">🚪<br>EXIT</button>
+  <a class="float-btn" id="download-pdf" title="Download PDF" href="assets/pdf/presentation.pdf" download="presentation.pdf" aria-label="Download presentation PDF">⬇<br>PDF</a>
+  <button class="float-btn" id="logout" title="Exit" type="button" onclick="handleExit(event)">🚪<br>EXIT</button>
 </div>
 
 <div class="status">
@@ -2135,6 +2249,7 @@
   // Auth check
   const SESSION_KEY = 'zeuss_auth';
   const authEnabled = false; // disabled for static publishing safety
+  const EXIT_FALLBACK_URLS = ['./index.html', '../index.html', '/index.html', '/'];
 
   let currentSlide = 0;
   let totalSlides = 26;
@@ -2415,13 +2530,13 @@
         image: 'assets/images/img46.jpg',
         tag: '<span class="accent-cyan">SECOND PLATFORM</span> · <span class="accent-gold">DIFFERENT DRONE AIRFRAME</span>',
         subtitle: 'A separate ZEUSS drone platform, distinct from the interceptor shown earlier.',
-        slideClass: 'mobile-image-fill mobile-image-focus-center mobile-text-centered',
+        slideClass: 'mobile-image-fill mobile-image-focus-center mobile-text-centered mobile-balance-center',
         
       },
       {
         type: 'feature',
         tag: '<span class="accent-red">SURVIVABILITY</span>',
-        slideClass: 'mobile-image-fill mobile-image-focus-center mobile-text-centered',
+        slideClass: 'mobile-image-fill mobile-image-focus-center mobile-text-centered mobile-balance-center',
         title: 'BUILT FOR THE <span class="accent-red">IMPOSSIBLE</span>',
         subtitle: '<span class="accent-red">Fire</span>. <span class="accent-cyan">Water</span>. <span class="accent-purple">Electronic Warfare</span>.',
         image: 'assets/images/zeuss_fire.jpg',
@@ -2523,7 +2638,7 @@
         title: '<span class="accent-red">FIRE</span>PROOF.<br><span class="accent-cyan">WATER</span>PROOF.<br><span class="accent-purple">BATTLEPROOF</span>.',
         image: 'assets/images/zeuss_battle.jpg',
         tag: '<span class="accent-cyan">ZEUSS</span> · <span class="accent-red">BUILT FOR THE IMPOSSIBLE</span>',
-        slideClass: 'mobile-image-fill mobile-image-focus-center mobile-text-centered'
+        slideClass: 'mobile-image-fill mobile-image-focus-center mobile-text-centered mobile-balance-center'
       },
       {
         type: 'feature',
@@ -2547,7 +2662,7 @@
         title: 'FROM <span class="accent-cyan">SKY</span><br>TO <span class="accent-blue">SEA</span> IN<br><span class="accent-gold">SECONDS</span>',
         image: 'assets/images/zeuss_water.jpg',
         tag: '<span class="accent-cyan">ONE DRONE</span> · <span class="accent-cyan">TWO WORLDS</span>',
-        slideClass: 'mobile-image-fill mobile-image-focus-center mobile-text-centered'
+        slideClass: 'mobile-image-fill mobile-image-focus-center mobile-text-centered mobile-balance-center'
       },
       {
         type: 'feature',
@@ -2583,7 +2698,7 @@
         title: '<span class="accent-cyan">ZEUSS</span> —<br><span class="accent-red">BEYOND</span> <span class="accent-green">LIMITS</span>',
         image: 'assets/images/zeuss_final.jpg',
         tag: '<span class="accent-purple">PATENT</span> <span class="accent-gold">TECHNOLOGY</span>',
-        slideClass: 'mobile-image-fill mobile-image-focus-center mobile-text-centered'
+        slideClass: 'mobile-image-fill mobile-image-focus-center mobile-text-centered mobile-balance-center'
       }
     ];
 
@@ -2836,6 +2951,60 @@
     }, 600);
   }
 
+
+  function resolveExitTarget() {
+    const params = new URLSearchParams(window.location.search);
+    const queryTarget = (params.get('exit') || '').trim();
+    const bodyTarget = (document.body?.dataset?.exitUrl || '').trim();
+
+    if (document.referrer) {
+      try {
+        const referrerUrl = new URL(document.referrer, window.location.href);
+        if (referrerUrl.origin === window.location.origin && referrerUrl.href !== window.location.href) {
+          return referrerUrl.href;
+        }
+      } catch (err) {}
+    }
+
+    const candidates = [queryTarget, bodyTarget, ...EXIT_FALLBACK_URLS].filter(Boolean);
+    for (const candidate of candidates) {
+      try {
+        const resolved = new URL(candidate, window.location.href);
+        if (resolved.href !== window.location.href) {
+          return resolved.href;
+        }
+      } catch (err) {}
+    }
+
+    return 'about:blank';
+  }
+
+  function handleExit(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+    }
+
+    try { sessionStorage.removeItem(SESSION_KEY); } catch (err) {}
+    try { localStorage.removeItem(SESSION_KEY); } catch (err) {}
+
+    const exitTarget = resolveExitTarget();
+
+    try {
+      window.location.assign(exitTarget);
+      return false;
+    } catch (err) {
+      try {
+        window.location.replace(exitTarget);
+        return false;
+      } catch (err2) {
+        try { window.close(); } catch (err3) {}
+        return false;
+      }
+    }
+  }
+
   function setupEventListeners() {
     // Navigation buttons
     document.getElementById('next').addEventListener('click', () => {
@@ -2854,14 +3023,7 @@
       showSlide(0);
     });
 
-    document.getElementById('logout').addEventListener('click', () => {
-      if (authEnabled) {
-        sessionStorage.removeItem(SESSION_KEY);
-        window.location.href = 'login.html';
-      } else {
-        showSlide(0);
-      }
-    });
+    document.getElementById('logout').addEventListener('click', handleExit);
 
     // Keyboard navigation
     document.addEventListener('keydown', e => {
